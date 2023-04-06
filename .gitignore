@@ -1,0 +1,14 @@
+# Emacs related
+*~
+\#*\#
+
+# Build Related
+*.a
+*.o
+*.so
+*.d
+*.out
+
+# Tests related
+__pycache__*
+.pytest_cache
