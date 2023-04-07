@@ -28,12 +28,12 @@ LIB			:= $(addprefix -Llib,$(LIB_NAMES)) $(addprefix -l,$(LIB_NAMES)	\
 # List of all sources (.c)
 # -------------------------------------------------------------------------
 SRC_DIR		:= srcs
-SRC_LST		:=
+SRC_LST		:= $(addprefix mstack/,ft_mstack_init.c ft_mstack_extend.c)
 SRCS		:= $(addprefix $(SRC_DIR)/,$(SRC_LST))
 
 # List of all object files (.o)
 # -------------------------------------------------------------------------
-OBJ_DIR		:= objs
+OBJ_DIR		:= objs$(DEFINES)
 OBJ_LST		:= $(SRC_LST:.c=.o)
 OBJS		:= $(addprefix $(OBJ_DIR)/,$(OBJ_LST))
 
@@ -55,7 +55,7 @@ $(GENERIC): $(NAME)
 			ln -s $(NAME) $(GENERIC)
 
 $(NAME):	$(OBJS)
-			$(CC) $(CFLAGS) $(INCLUDES) $^ -shared -o $@
+			$(CC) $(INCLUDES) $^ -shared -o $@
 
 $(OBJ_DIR)/%.o:	$(SRC_DIR)/%.c start_compiling
 			@mkdir -p $(dir $@)

@@ -6,9 +6,14 @@ The aim of this project is to build a malloc implementation offering 3 buckets:
  - third one for the other ones
 
 ## Implementation
- I choose to build on two different strategies: one for the tiny and small
- blocks, and one for the lage blocks.
+It is important to notice that `mmap` produces a stack-like memory structure.
+Thus, I need to manage this stack like first.
 
-### Small block strategy
-I build a heap, starting with a heap header, containing informations about the
-length of the current heap chunk and the address of the next free memory chunk.
+### stack of pages
+The `mmap` area is mainly growing down. Thus, I chosed to pack all the
+informations at the top-addresses of the allocated pages. It induces many
+constraints on how to behave on the area, like moving on the pages to write the
+header, and not just write it after maping. But it should provide a much easier
+way to merge areas and extend it mermory size under normal use conditions.
+
+![allocation scheme](./img/mstack-scheme.png)
