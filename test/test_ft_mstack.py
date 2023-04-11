@@ -2,6 +2,8 @@ import ctypes
 import pytest
 import resource
 
+from test_ft_gdata import T_GData
+
 class T_MStack(ctypes.Structure):
     pass
 
@@ -168,3 +170,22 @@ class TestMStack:
             tot_size += ctypes.cast(base, ctypes.POINTER(T_MStack)).contents.size
             base = ctypes.cast(base, ctypes.POINTER(T_MStack)).contents.next
         assert tot_size == 4096 * 55      # Sum i + 1 for i in range(10)
+
+    def test_gdata_application(self, libmalloc):
+        def valid_applications(root):
+            base = ctypes.cast(root, ctypes.c_void_p)
+            while base:
+                broot = ctypes.cast(base, ctypes.POINTER(T_MStack)).contents
+                titi = ctypes.cast(ctypes.addressof(broot) - broot.size + ctypes.sizeof(broot), ctypes.POINTER(T_GData)).contents
+                toto = ctypes.cast(ctypes.addressof(broot) - ctypes.sizeof(T_GData), ctypes.POINTER(T_GData)).contents
+                if titi.size != broot.size - ctypes.sizeof(broot) - 16:
+                    return False
+                if toto.size != 0 :
+                    return False
+                base = ctypes.cast(base, ctypes.POINTER(T_MStack)).contents.next
+            return True
+
+        root = ctypes.POINTER(T_MStack)()
+        for i in range(17):
+            root = libmalloc.ft_mstack_extend(root, 4096 * (i + 1))
+            assert valid_applications(root)

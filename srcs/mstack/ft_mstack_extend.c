@@ -15,10 +15,13 @@
  * @brief extend the current mstack
  */
 
+#include "ft_gdata.h"
 #include "ft_mstack.h"
 
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <sys/mman.h>
 #include <unistd.h>
 
@@ -67,7 +70,7 @@ static void _ft_mstack_insert(t_mstack *root, t_mstack *new) {
 /**
  * @fn uint8_t _ft_mstack_merge(t_mstack *new)
  * @param new: fresh new mstack
- * @return type of merge
+ * @return type of merge (backward: at root of stack, forward: at top of stack)
  */
 static uint8_t _ft_mstack_merge(t_mstack *new) {
     uint8_t merge = MERGE_NO;
@@ -92,6 +95,27 @@ static uint8_t _ft_mstack_merge(t_mstack *new) {
     return (merge);
 }
 
+static void _ft_mstack_set_gdata(uint8_t merge, void *ptr, size_t size) {
+    size_t totsize;
+    bool   prev;
+    bool   next;
+
+    totsize = size;
+    prev    = false;
+    next    = false;
+    if (merge & MERGE_BACKWARD) {
+        totsize += sizeof(t_mstack);
+        next = true;
+    }
+    if (merge & MERGE_FORWARD) {
+        totsize += sizeof(t_mstack);
+        ptr -= sizeof(t_mstack);
+        prev = false;
+    }
+    dprintf(2, "ptr: %p size: %lu merge %hhu\n", ptr, size, merge);
+    ft_gdata_set_area(ptr, totsize, prev, next);
+}
+
 /**
  * @fn void *ft_mstack_extend(t_mstack *root, size_t size)
  * @param root: root of the stacks
@@ -100,7 +124,9 @@ static uint8_t _ft_mstack_merge(t_mstack *new) {
  */
 t_mstack *ft_mstack_extend(t_mstack *root, size_t size) {
     t_mstack *new;
-    size_t len;
+    t_mstack *ptr;
+    size_t    len;
+    uint8_t   merge_info;
 
     /* Create the new pages */
     len = _ft_mstack_resize(size);
@@ -113,11 +139,13 @@ t_mstack *ft_mstack_extend(t_mstack *root, size_t size) {
 
     if (new == NULL)
         return (NULL);
+    ptr = new;
     new = (t_mstack *)((uint8_t *)new + len - sizeof(t_mstack));
     ft_mstack_init(new, len);
     _ft_mstack_insert(root, new);
     if ((uintptr_t)root < (uintptr_t) new)
         root = new;
-    _ft_mstack_merge(new);
+    merge_info = _ft_mstack_merge(new);
+    _ft_mstack_set_gdata(merge_info, ptr, len - sizeof(t_mstack));
     return (root);
 }
