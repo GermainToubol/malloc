@@ -23,12 +23,15 @@ def libmalloc(request):
     lib.ft_gdata_init.argtypes = [c.POINTER(T_GData), c.c_size_t]
     lib.ft_gdata_init.restype = c.c_bool
     lib.ft_gdata_free.argtypes = [c.POINTER(T_GData)]
+    lib.ft_gdata_alloc.argtypes = [c.POINTER(T_GData), c.c_size_t, c.c_uint8]
+    lib.ft_gdata_alloc.restype = c.c_void_p
     if (hasattr(lib, '_ft_gdata_merge')):
         lib._ft_gdata_merge.argtypes = [c.POINTER(T_GData)]
         lib._ft_gdata_merge.restype = c.c_uint8
     return (lib)
 
 class TestFtGData:
+    # ______________________________________________________________________
     def _init_tab(self, tab):
         for i, elm in enumerate(tab):
             tab[i].size = 256 | 1 | 0b110
@@ -37,6 +40,7 @@ class TestFtGData:
         tab[0].size = 256 | 0b110
         tab[-1].size = 0 | 1
 
+    # ______________________________________________________________________
     def test_ft_gdata_init(self, libmalloc):
         gdata = T_GData()
         assert libmalloc.ft_gdata_init(c.pointer(gdata), 0) == False
@@ -47,6 +51,7 @@ class TestFtGData:
 
         assert libmalloc.ft_gdata_init(c.POINTER(T_GData)(), 0) == True
 
+    # ______________________________________________________________________
     def test_ft_gdata_init2(self, libmalloc):
         tab = (T_GData * 5)()
         tab[0].prevsize = 0;
@@ -54,6 +59,7 @@ class TestFtGData:
             libmalloc.ft_gdata_init(c.pointer(elm), 256)
             assert tab[i].size == tab[i + 1].prevsize
 
+    # ______________________________________________________________________
     def test_ft_gdata_free_nomerge(self, libmalloc):
         tab = (T_GData * 5)()
         self._init_tab(tab)
@@ -67,6 +73,7 @@ class TestFtGData:
 
         libmalloc.ft_gdata_free(c.POINTER(T_GData)())
 
+    # ______________________________________________________________________
     def test_ft_gdata_free_merge(self, libmalloc):
         tab = (T_GData * 7)()
         self._init_tab(tab)
@@ -84,6 +91,43 @@ class TestFtGData:
         assert tab[1].size == 5 * 256 + 1
         assert tab[6].prevsize == 256 * 5
 
+    # ______________________________________________________________________
+    def test_ft_gdata_alloc(self, libmalloc):
+        tab = (T_GData * 7)()
+        self._init_tab(tab)
+        assert libmalloc.ft_gdata_alloc(c.pointer(tab[1]), 256, 1) is None
+
+        tab[1].size = 257
+        tab[2].prevsize = 256
+        tab[2].size = 256 + 6
+        assert libmalloc.ft_gdata_alloc(c.pointer(tab[1]), 248, 1) == c.addressof(tab[1].data)
+        assert tab[1].size == 256 | 1 | 0b010
+        assert tab[2].size == 256 + 7
+
+        tab[1].size = 257
+        tab[2].prevsize = 256
+        tab[2].size = 256 + 6
+        assert libmalloc.ft_gdata_alloc(c.pointer(tab[1]), 249, 1) is None
+
+        self._init_tab(tab)
+        libmalloc.ft_gdata_free(c.pointer(tab[1]))
+        libmalloc.ft_gdata_free(c.pointer(tab[2]))
+        libmalloc.ft_gdata_free(c.pointer(tab[3]))
+        tab[3].size = 0
+        tab[3].prevsize = 0
+        assert libmalloc.ft_gdata_alloc(c.pointer(tab[1]), 248, 2) == c.addressof(tab[3].data)
+        assert tab[3].prevsize == 512
+        assert tab[1].size == 513
+        assert tab[3].size == 256 | 0b100
+
+        self._init_tab(tab)
+        libmalloc.ft_gdata_free(c.pointer(tab[1]))
+        libmalloc.ft_gdata_free(c.pointer(tab[2]))
+        libmalloc.ft_gdata_free(c.pointer(tab[3]))
+        assert libmalloc.ft_gdata_alloc(c.pointer(tab[1]), 504, 3) == c.addressof(tab[1].data)
+        assert tab[1].size == 256 * 3 | 0b110 | 1
+
+    # ______________________________________________________________________
     def test_ft_gdata_merge(self, libmalloc):
         if not hasattr(libmalloc, '_ft_gdata_merge'):
             pytest.skip('static function test')
