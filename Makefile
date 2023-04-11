@@ -28,12 +28,13 @@ LIB			:= $(addprefix -Llib,$(LIB_NAMES)) $(addprefix -l,$(LIB_NAMES)	\
 # List of all sources (.c)
 # -------------------------------------------------------------------------
 SRC_DIR		:= srcs
-SRC_LST		:= $(addprefix mstack/,ft_mstack_init.c ft_mstack_extend.c)
+SRC_LST		:= $(addprefix mstack/,ft_mstack_init.c ft_mstack_extend.c)		\
+				$(addprefix gdata/,ft_gdata_init.c ft_gdata_free.c)
 SRCS		:= $(addprefix $(SRC_DIR)/,$(SRC_LST))
 
 # List of all object files (.o)
 # -------------------------------------------------------------------------
-OBJ_DIR		:= objs$(DEFINES)
+OBJ_DIR		:= objs
 OBJ_LST		:= $(SRC_LST:.c=.o)
 OBJS		:= $(addprefix $(OBJ_DIR)/,$(OBJ_LST))
 

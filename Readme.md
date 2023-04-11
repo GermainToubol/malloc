@@ -17,3 +17,13 @@ header, and not just write it after maping. But it should provide a much easier
 way to merge areas and extend it mermory size under normal use conditions.
 
 ![allocation scheme](./img/mstack-scheme.png)
+
+### Managing datas
+Each dataframe is wrapped inside a gdata structure, describing the occupied
+space. This gdata is used as a double linked list.
+
+![gdata chaining](./img/gdata_usage.png)
+
+The free places are managed in a separate structure
+
+![gdata description](./img/data-holder.png)
