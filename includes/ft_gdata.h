@@ -47,7 +47,9 @@ typedef struct s_free {
 #define BLOCK_OTHER 0b110UL
 #define BLOCK_MASK  0b111UL
 
-bool ft_gdata_init(t_gdata *data, size_t size);
-void ft_gdata_free(t_gdata *data);
+bool  ft_gdata_init(t_gdata *data, size_t size);
+void  ft_gdata_free(t_gdata *data);
+void  ft_gdata_set_area(void *area, size_t size, bool prev, bool next);
+void *ft_gdata_alloc(t_gdata *data, size_t size, uint8_t type);
 
 #endif /* FT_GDATA_H */
