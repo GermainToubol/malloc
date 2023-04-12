@@ -45,7 +45,7 @@ DEPS		:= $(OBJS:.o=.d)
 # Compilation options
 # -------------------------------------------------------------------------
 CC			= gcc
-CFLAGS		= -Wall -Wextra -Werror -fPIE
+CFLAGS		= -Wall -Wextra -Werror -fPIC
 SHELL		= /bin/bash
 
 # Rules
