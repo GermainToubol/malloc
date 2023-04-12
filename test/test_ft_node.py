@@ -1,4 +1,5 @@
 import ctypes as c
+from _ctypes import dlclose
 import numpy as np
 import pytest
 
@@ -20,7 +21,8 @@ def libmalloc(request):
     lib.ft_tree_delete.restype = c.c_void_p
     lib.ft_tree_search.argtypes = [c.POINTER(T_Node), c.c_uint64]
     lib.restype = c.c_void_p
-    return lib
+    yield lib
+    dlclose(lib._handle)
 
 class TestTree:
     def test_ft_tree_insert(self, libmalloc):

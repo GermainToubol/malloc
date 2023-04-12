@@ -1,4 +1,5 @@
 import ctypes as c
+from _ctypes import dlclose
 import pytest
 
 class T_GData(c.Structure):
@@ -29,7 +30,8 @@ def libmalloc(request):
         lib._ft_gdata_merge.argtypes = [c.POINTER(T_GData)]
         lib._ft_gdata_merge.restype = c.c_uint8
     lib.ft_gdata_set_area.argtypes = [c.c_void_p, c.c_size_t, c.c_bool, c.c_bool]
-    return (lib)
+    yield (lib)
+    dlclose(lib._handle)
 
 class TestFtGData:
     # ______________________________________________________________________

@@ -1,4 +1,5 @@
 import ctypes
+from _ctypes import dlclose
 import pytest
 import resource
 
@@ -36,8 +37,8 @@ def libmalloc(request):
         ctypes.c_size_t
         ]
     lib.ft_mstack_extend.restype = ctypes.POINTER(T_MStack)
-
-    return (lib)
+    yield (lib)
+    dlclose(lib._handle)
 
 class TestMStack:
     def test_mstack_init(self, libmalloc):
