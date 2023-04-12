@@ -104,7 +104,7 @@ static t_node *_ft_balence_insert(t_node *node, t_node **root) {
             tab[is_on_left ? 1 : 0](node->parent->parent, root);
         }
     }
-	(*root)->color = COLOR_BLACK;
+    (*root)->color = COLOR_BLACK;
     return (*root);
 }
 
@@ -148,8 +148,8 @@ t_node *ft_tree_delete(t_node *root, t_node *z) {
     t_node *x;
     t_node *x_parent;
 
-	if (z == NULL)
-		return (root);
+    if (z == NULL)
+        return (root);
     y        = z;
     x        = NULL;
     x_parent = NULL;
@@ -183,88 +183,87 @@ t_node *ft_tree_delete(t_node *root, t_node *z) {
             z->parent->left = y;
         else
             z->parent->right = y;
-        y->parent = z->parent;
-		uint64_t coltmp = y->color;
-		y->color = z->color;
-		z->color = coltmp;
-        y = z;
+        y->parent       = z->parent;
+        uint64_t coltmp = y->color;
+        y->color        = z->color;
+        z->color        = coltmp;
+        y               = z;
     }
     else {
         x_parent = y->parent;
-		if (x != NULL)
-			x->parent = y->parent;
-		if (root == z || z->parent == NULL)
-			root = x;
-		else if (z->parent->left == z)
-			z->parent->left = x;
-		else
-			z->parent->right = x;
+        if (x != NULL)
+            x->parent = y->parent;
+        if (root == z || z->parent == NULL)
+            root = x;
+        else if (z->parent->left == z)
+            z->parent->left = x;
+        else
+            z->parent->right = x;
     }
-	if (y->color != COLOR_RED){
-		while (x != root && (x == NULL || x->color == COLOR_BLACK)){
-			if (x == x_parent->left) // Replace like upward
-			{
-				t_node *w = x_parent->right;
-				if (w->color == COLOR_RED) {
-					w->color = COLOR_BLACK;
-					x_parent->color = COLOR_RED;
-					_left_rotate(x_parent, &root);
-					w = x_parent->right;
-				}
-				if (is_black_node(w->left) && is_black_node(w->right)){
-					w->color = COLOR_RED;
-					x = x_parent;
-					x_parent = x_parent->parent;
-				}
-				else {
-					if (is_black_node(w->right)) {
-						if (w->left != NULL)
-							w->left->color = COLOR_BLACK;
-						w->color = COLOR_RED;
-						_right_rotate(w, &root);
-						w = x_parent->right;
-					}
-					w->color = x_parent->color;
-					x_parent->color = COLOR_BLACK;
-					if (w->right != NULL)
-						w->right->color = COLOR_BLACK;
-					_left_rotate(x_parent, &root);
-					break;
-				}
-			}
-			else
-			{
-				t_node *w = x_parent->left;
-				if (w->color == COLOR_RED) {
-					w->color = COLOR_BLACK;
-					x_parent->color = COLOR_RED;
-					_right_rotate(x_parent, &root);
-					w = x_parent->left;
-				}
-				if (is_black_node(w->left) && is_black_node(w->right)){
-					w->color = COLOR_RED;
-					x = x_parent;
-					x_parent = x_parent->parent;
-				}
-				else {
-					if (is_black_node(w->left)) {
-						if (w->right != NULL)
-							w->right->color = COLOR_BLACK;
-						w->color = COLOR_RED;
-						_left_rotate(w, &root);
-						w = x_parent->left;
-					}
-					w->color = x_parent->color;
-					x_parent->color = COLOR_BLACK;
-					if (w->left != NULL)
-						w->left->color = COLOR_BLACK;
-					_right_rotate(x_parent, &root);
-					break;
-				}
-			}
-		}
-		if (x != NULL)
-			x->color = COLOR_BLACK;
-	}
-	return (root);
+    if (y->color != COLOR_RED) {
+        while (x != root && (x == NULL || x->color == COLOR_BLACK)) {
+            if (x == x_parent->left) // Replace like upward
+            {
+                t_node *w = x_parent->right;
+                if (w->color == COLOR_RED) {
+                    w->color        = COLOR_BLACK;
+                    x_parent->color = COLOR_RED;
+                    _left_rotate(x_parent, &root);
+                    w = x_parent->right;
+                }
+                if (is_black_node(w->left) && is_black_node(w->right)) {
+                    w->color = COLOR_RED;
+                    x        = x_parent;
+                    x_parent = x_parent->parent;
+                }
+                else {
+                    if (is_black_node(w->right)) {
+                        if (w->left != NULL)
+                            w->left->color = COLOR_BLACK;
+                        w->color = COLOR_RED;
+                        _right_rotate(w, &root);
+                        w = x_parent->right;
+                    }
+                    w->color        = x_parent->color;
+                    x_parent->color = COLOR_BLACK;
+                    if (w->right != NULL)
+                        w->right->color = COLOR_BLACK;
+                    _left_rotate(x_parent, &root);
+                    break;
+                }
+            }
+            else {
+                t_node *w = x_parent->left;
+                if (w->color == COLOR_RED) {
+                    w->color        = COLOR_BLACK;
+                    x_parent->color = COLOR_RED;
+                    _right_rotate(x_parent, &root);
+                    w = x_parent->left;
+                }
+                if (is_black_node(w->left) && is_black_node(w->right)) {
+                    w->color = COLOR_RED;
+                    x        = x_parent;
+                    x_parent = x_parent->parent;
+                }
+                else {
+                    if (is_black_node(w->left)) {
+                        if (w->right != NULL)
+                            w->right->color = COLOR_BLACK;
+                        w->color = COLOR_RED;
+                        _left_rotate(w, &root);
+                        w = x_parent->left;
+                    }
+                    w->color        = x_parent->color;
+                    x_parent->color = COLOR_BLACK;
+                    if (w->left != NULL)
+                        w->left->color = COLOR_BLACK;
+                    _right_rotate(x_parent, &root);
+                    break;
+                }
+            }
+        }
+        if (x != NULL)
+            x->color = COLOR_BLACK;
+    }
+    return (root);
 }

@@ -31,7 +31,7 @@ SRC_DIR		:= srcs
 SRC_LST		:= $(addprefix mstack/,ft_mstack_init.c ft_mstack_extend.c)		\
 				$(addprefix gdata/,ft_gdata_init.c ft_gdata_free.c			\
 					ft_gdata_alloc.c ft_gdata_set_area.c)					\
-				$(addprefix tree/,ft_tree_insert.c)
+				$(addprefix tree/,ft_tree_insert.c ft_tree_search.c)
 SRCS		:= $(addprefix $(SRC_DIR)/,$(SRC_LST))
 
 # List of all object files (.o)

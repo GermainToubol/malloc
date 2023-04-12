@@ -18,6 +18,8 @@ def libmalloc(request):
     lib.ft_tree_insert.restype = c.c_void_p
     lib.ft_tree_delete.argtypes = [c.POINTER(T_Node), c.POINTER(T_Node)]
     lib.ft_tree_delete.restype = c.c_void_p
+    lib.ft_tree_search.argtypes = [c.POINTER(T_Node), c.c_uint64]
+    lib.restype = c.c_void_p
     return lib
 
 class TestTree:
@@ -142,6 +144,23 @@ class TestTree:
         for i in range(len(ntab)):
             node = ntab[i]
             root = libmalloc.ft_tree_delete(c.cast(root, c.POINTER(T_Node)), c.pointer(node));
-            #res, _ = validate_rb(root)
-            #assert res
         assert root is None
+
+    def test_ft_tree_search(self, libmalloc):
+        root = 0
+        ntab = (T_Node * 55)()
+        for i in range(len(ntab)):
+            node = ntab[i]
+            node.size = (i + 1) * 256
+            node.parent = 0
+            node.left = 0
+            node.right = 0
+            root = libmalloc.ft_tree_insert(c.cast(root, c.POINTER(T_Node)), c.pointer(node));
+        node = libmalloc.ft_tree_search(c.cast(root, c.POINTER(T_Node)), 200)
+        assert node == c.addressof(ntab[0])
+        node = libmalloc.ft_tree_search(c.cast(root, c.POINTER(T_Node)), 18 * 256)
+        assert node == c.addressof(ntab[17])
+        node = libmalloc.ft_tree_search(c.cast(root, c.POINTER(T_Node)), 51 * 256 - 7)
+        assert node == c.addressof(ntab[50])
+        node = libmalloc.ft_tree_search(c.cast(root, c.POINTER(T_Node)), 25600)
+        assert node == 0
