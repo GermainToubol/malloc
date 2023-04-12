@@ -14,6 +14,15 @@
  * @file ft_tree_insert.c
  */
 
+/*
+ * https://rosettacode.org/wiki/Red_black_trees
+ * Based on the rosettacode C# RBTree implementation
+ *
+ * Distributed under Creative Commons Attribution-ShareAlike 4.0 International
+ * (CC BY-SA 4.0)
+ * https://creativecommons.org/licenses/by-sa/4.0/
+ */
+
 #include "ft_tree.h"
 
 #include <stdbool.h>
@@ -128,5 +137,55 @@ t_node *ft_tree_insert(t_node *root, t_node *new) {
     while (root->parent != NULL)
         root = root->parent;
     root->color = COLOR_BLACK;
+    return (root);
+}
+
+t_node *ft_tree_delete(t_node *root, t_node *z) {
+    t_node *y;
+    t_node *x;
+    t_node *x_parent;
+
+    y        = z;
+    x        = NULL;
+    x_parent = NULL;
+    if (y->left == NULL)
+        x = y->right;
+    else if (y->right == NULL)
+        x = y->left;
+    else {
+        y = y->right;
+        while (y->left != NULL)
+            y = y->left;
+        x = y->right;
+    }
+    if (y != z) {
+        z->left->parent = y;
+        y->left         = z->left;
+        if (y != z->right) {
+            x_parent = y->parent;
+            if (x != NULL)
+                x->parent = y->parent;
+            y->parent->left  = x;
+            y->right         = z->right;
+            y->right->parent = y;
+        }
+        else
+            x_parent = y;
+
+        if (z->parent == NULL)
+            ;
+        else if (z->parent->left == z)
+            z->parent->left = y;
+        else
+            z->parent->right = y;
+        y->parent = z->parent;
+        y->color += z->color;
+        z->color = y->color - z->color;
+        y->color -= z->color;
+        y = z;
+    }
+    else {
+        // y == z
+    }
     return (root);
 }
