@@ -30,7 +30,8 @@ LIB			:= $(addprefix -Llib,$(LIB_NAMES)) $(addprefix -l,$(LIB_NAMES)	\
 SRC_DIR		:= srcs
 SRC_LST		:= $(addprefix mstack/,ft_mstack_init.c ft_mstack_extend.c)		\
 				$(addprefix gdata/,ft_gdata_init.c ft_gdata_free.c			\
-					ft_gdata_alloc.c ft_gdata_set_area.c)
+					ft_gdata_alloc.c ft_gdata_set_area.c)					\
+				$(addprefix tree/,ft_tree_insert.c)
 SRCS		:= $(addprefix $(SRC_DIR)/,$(SRC_LST))
 
 # List of all object files (.o)
