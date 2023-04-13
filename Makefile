@@ -10,9 +10,11 @@
 #                                                                              #
 #******************************************************************************#
 
-HOSTTYPE	?= $(shell uname -m)_$(shell uname -s)
-GENERIC		:= libft_malloc.so
-NAME		:= libft_malloc_$(HOSTTYPE).so
+# Compilation options
+# -------------------------------------------------------------------------
+CC			:= gcc
+CFLAGS		:= -Wall -Wextra -Werror -fPIC
+SHELL		:= /bin/bash
 
 # List of all inclusions (.h and .a)
 # -------------------------------------------------------------------------
@@ -37,22 +39,35 @@ SRCS		:= $(addprefix $(SRC_DIR)/,$(SRC_LST))
 
 # List of all object files (.o)
 # -------------------------------------------------------------------------
-OBJ_DIR		:= objs
+ifeq (,$(filter test, $(MAKECMDGOALS)))
+	OBJ_DIR	:= objs
+	CFLAGS	+= -fvisibility=hidden
+	HOSTTYPE	?= $(shell uname -m)_$(shell uname -s)
+else
+	OBJ_DIR	:= objs.test
+	HOSTTYPE	?= $(shell uname -m)_$(shell uname -s)
+	HOSTTYPE 	:= $(HOSTTYPE)_test
+endif
+
+GENERIC		:= libft_malloc.so
+NAME		:= libft_malloc_$(HOSTTYPE).so
+
+
 OBJ_LST		:= $(SRC_LST:.c=.o)
 OBJS		:= $(addprefix $(OBJ_DIR)/,$(OBJ_LST))
 
 DEPS		:= $(OBJS:.o=.d)
 
-# Compilation options
-# -------------------------------------------------------------------------
-CC			= gcc
-CFLAGS		= -Wall -Wextra -Werror -fPIC
-SHELL		= /bin/bash
-
 # Rules
 # -------------------------------------------------------------------------
 .PHONY:		all
-all:		$(GENERIC)
+all:		test-generic $(GENERIC)
+
+.PHONY: 	test_generic
+test-generic:
+			@if [ ! $(GENERIC) -ef $(NAME) ]; then							\
+				$(RM) -v $(GENERIC);										\
+			fi
 
 $(GENERIC): $(NAME)
 			$(RM) $(GENERIC)
@@ -88,7 +103,7 @@ fclean:		clean dclean
 re:			fclean all
 
 .PHONY: 	test
-test:		$(GENERIC)
+test:		all
 			pytest
 
 # Documentation
