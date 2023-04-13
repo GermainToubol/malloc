@@ -34,11 +34,9 @@ typedef struct s_node {
 #define COLOR_BLACK 0
 #define COLOR_RED   1
 
-void           ft_node_init(t_node *node, uint64_t size);
-t_node *       ft_tree_insert(t_node *root, t_node *new);
-t_node *       ft_tree_delete(t_node *root, t_node *old);
-t_node *       ft_tree_search(t_node *root, uint64_t size);
-
-extern t_node *g_root; /* Temporary, needs to be removed */
+void    ft_node_init(t_node *node, uint64_t size);
+t_node *ft_tree_insert(t_node *root, t_node *new);
+t_node *ft_tree_delete(t_node *root, t_node *old);
+t_node *ft_tree_search(t_node *root, uint64_t size);
 
 #endif /* FT_TREE_H */

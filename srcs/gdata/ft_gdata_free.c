@@ -15,6 +15,7 @@
  */
 
 #include "ft_gdata.h"
+#include "ft_malloc.h"
 #include "ft_tree.h"
 
 #include <stddef.h>
@@ -39,7 +40,7 @@ static uint8_t _ft_gdata_merge(t_gdata *data) {
     next = (t_gdata *)(&data->data[size - sizeof(*data)]);
     if (size != 0 && (next->size & BLOCK_MASK) == 0
         && (next->size & ~BLOCK_MASK) != 0) {
-        g_root = ft_tree_delete(g_root, (t_node *)next->data);
+        g_master.sroot = ft_tree_delete(g_master.sroot, (t_node *)next->data);
         data->size += next->size;
         size           = data->size & ~BLOCK_MASK;
         next           = (t_gdata *)&data->data[size - sizeof(*data)];
@@ -49,7 +50,8 @@ static uint8_t _ft_gdata_merge(t_gdata *data) {
 
     if ((data->size & BLOCK_USED) == 0 && data->prevsize != 0) {
         previous = (t_gdata *)((uint8_t *)data - data->prevsize);
-        g_root   = ft_tree_delete(g_root, (t_node *)previous->data);
+        g_master.sroot =
+            ft_tree_delete(g_master.sroot, (t_node *)previous->data);
         previous->size += data->size;
         size           = previous->size & ~BLOCK_MASK;
         next           = (t_gdata *)(&previous->data[size - sizeof(*data)]);
@@ -57,7 +59,7 @@ static uint8_t _ft_gdata_merge(t_gdata *data) {
         ret |= BACK_MERGE;
     }
     ft_node_init((t_node *)data->data, data->size);
-    g_root = ft_tree_insert(g_root, (t_node *)data->data);
+    g_master.sroot = ft_tree_insert(g_master.sroot, (t_node *)data->data);
     return (ret);
 }
 

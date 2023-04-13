@@ -18,6 +18,12 @@ class T_Node(c.Structure):
         ('size', c.c_uint64)
         ]
 
+class T_Root(c.Structure):
+    _fields_ = [
+        ('mroot', c.c_void_p),
+        ('sroot', c.POINTER(T_Node))
+        ]
+
 @pytest.fixture
 def libmalloc(request):
     """ Provide the libft_malloc library
@@ -46,13 +52,15 @@ class TestIntegrate:
     def test_on_gdata_init(self, libmalloc):
         data = (T_GData * 5)()
         libmalloc.ft_gdata_init(c.pointer(data[0]), 256)
-        a = c.POINTER(T_Node).in_dll(libmalloc, "g_root")
+        master = T_Root.in_dll(libmalloc, "g_master")
+        a = master.sroot
         assert c.addressof(data[0].data) == c.addressof(a.contents)
 
     def test_on_libmalloc_reinit(self, libmalloc):
         data = (T_GData * 5)()
         libmalloc.ft_gdata_init(c.pointer(data[0]), 256)
-        a = c.POINTER(T_Node).in_dll(libmalloc, "g_root")
+        master = T_Root.in_dll(libmalloc, "g_master")
+        a = master.sroot
         assert a.contents.parent is None
         assert a.contents.left is None
         assert a.contents.right is None
