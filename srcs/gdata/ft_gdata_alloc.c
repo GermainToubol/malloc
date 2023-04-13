@@ -16,6 +16,7 @@
 
 #include "ft_gdata.h"
 #include "ft_malloc.h"
+#include "ft_tree.h"
 
 #include <stddef.h>
 
@@ -38,6 +39,7 @@ void *ft_gdata_alloc(t_gdata *data, size_t size, uint8_t type) {
     if ((data->size & BLOCK_OTHER) != 0
         || size > data_size - sizeof(data->size))
         return (NULL);
+    g_root = ft_tree_delete(g_root, (t_node *)data->data);
     if (data_size > size + LARGE_THRESHOLD + sizeof(data->size)) {
         new_size = size + sizeof(data->size);
         if ((new_size & BLOCK_OTHER) != 0) {
@@ -47,9 +49,11 @@ void *ft_gdata_alloc(t_gdata *data, size_t size, uint8_t type) {
         new = (t_gdata *)(&data->data[data_size - new_size - sizeof(*data)]);
         new->size     = new_size;
         new->prevsize = data_size - new_size;
-        data_size     = new->prevsize | (data->size & BLOCK_USED);
-        data->size    = data_size;
-        data          = new;
+        ft_node_init((t_node *)data->data, new->prevsize);
+        g_root     = ft_tree_insert(g_root, (t_node *)data->data);
+        data_size  = new->prevsize | (data->size & BLOCK_USED);
+        data->size = data_size;
+        data       = new;
     }
     data_size = data->size & ~BLOCK_MASK;
     data->size |= (type << 1);

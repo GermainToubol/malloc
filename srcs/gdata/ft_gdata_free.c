@@ -15,6 +15,7 @@
  */
 
 #include "ft_gdata.h"
+#include "ft_tree.h"
 
 #include <stddef.h>
 #include <stdint.h>
@@ -36,7 +37,9 @@ static uint8_t _ft_gdata_merge(t_gdata *data) {
     ret  = 0;
     size = data->size & ~BLOCK_MASK;
     next = (t_gdata *)(&data->data[size - sizeof(*data)]);
-    if (size != 0 && (next->size & BLOCK_MASK) == 0) {
+    if (size != 0 && (next->size & BLOCK_MASK) == 0
+        && (next->size & ~BLOCK_MASK) != 0) {
+        g_root = ft_tree_delete(g_root, (t_node *)next->data);
         data->size += next->size;
         size           = data->size & ~BLOCK_MASK;
         next           = (t_gdata *)&data->data[size - sizeof(*data)];
@@ -44,14 +47,17 @@ static uint8_t _ft_gdata_merge(t_gdata *data) {
         ret |= FORWARD_MERGE;
     }
 
-    if (!(data->size & BLOCK_USED) && data->prevsize != 0) {
+    if ((data->size & BLOCK_USED) == 0 && data->prevsize != 0) {
         previous = (t_gdata *)((uint8_t *)data - data->prevsize);
+        g_root   = ft_tree_delete(g_root, (t_node *)previous->data);
         previous->size += data->size;
         size           = previous->size & ~BLOCK_MASK;
         next           = (t_gdata *)(&previous->data[size - sizeof(*data)]);
         next->prevsize = size;
         ret |= BACK_MERGE;
     }
+    ft_node_init((t_node *)data->data, data->size);
+    g_root = ft_tree_insert(g_root, (t_node *)data->data);
     return (ret);
 }
 

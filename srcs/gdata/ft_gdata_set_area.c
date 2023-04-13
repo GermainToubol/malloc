@@ -31,7 +31,6 @@ void ft_gdata_set_area(void *area, size_t size, bool prev, bool next) {
     t_gdata *data;
     t_gdata *last;
 
-    (void)next;
     data = (t_gdata *)area;
     last = (t_gdata *)((uint8_t *)area + size - sizeof(*data));
     if (area == NULL || size < 2 * sizeof(t_gdata))

@@ -100,18 +100,16 @@ class TestFtGData:
         self._init_tab(tab)
         assert libmalloc.ft_gdata_alloc(c.pointer(tab[1]), 256, 1) is None
 
-        tab[1].size = 257
-        tab[2].prevsize = 256
-        tab[2].size = 256 + 6
+        libmalloc.ft_gdata_free(c.pointer(tab[1]))
         assert libmalloc.ft_gdata_alloc(c.pointer(tab[1]), 248, 1) == c.addressof(tab[1].data)
         assert tab[1].size == 256 | 1 | 0b010
         assert tab[2].size == 256 + 7
 
-        tab[1].size = 257
-        tab[2].prevsize = 256
-        tab[2].size = 256 + 6
+        libmalloc.ft_gdata_free(c.pointer(tab[1]))
         assert libmalloc.ft_gdata_alloc(c.pointer(tab[1]), 249, 1) is None
 
+    def test_ft_gdata_alloc2(self, libmalloc):
+        tab = (T_GData * 7)()
         self._init_tab(tab)
         libmalloc.ft_gdata_free(c.pointer(tab[1]))
         libmalloc.ft_gdata_free(c.pointer(tab[2]))
@@ -123,6 +121,8 @@ class TestFtGData:
         assert tab[1].size == 513
         assert tab[3].size == 256 | 0b100
 
+    def test_ft_gdata_alloc3(self, libmalloc):
+        tab = (T_GData * 7)()
         self._init_tab(tab)
         libmalloc.ft_gdata_free(c.pointer(tab[1]))
         libmalloc.ft_gdata_free(c.pointer(tab[2]))
@@ -232,7 +232,15 @@ class TestFtGData:
         assert start2.prevsize == 0
         assert start2.size == 512 - 16
 
-        end0.size = 1
+    def test_ft_gdata_set_area2(self, libmalloc):
+        area = (c.c_uint8 * 4096)()
+        for i, _ in enumerate(area):
+            area[i] = 12
+        libmalloc.ft_gdata_set_area(area, 512, False, False)
+        start0 = c.cast(area, c.POINTER(T_GData)).contents
+        libmalloc.ft_gdata_alloc(c.pointer(start0), 400, 1)
+        end0 = c.cast(c.addressof(area) + 512 - 16, c.POINTER(T_GData)).contents
+        assert end0.size == 1
         libmalloc.ft_gdata_set_area(c.addressof(area) + 512, 512, True, False)
         start1 = c.cast(c.addressof(area) + 512, c.POINTER(T_GData)).contents
         end1 = c.cast(c.addressof(area) + 1024 - 16, c.POINTER(T_GData)).contents
@@ -241,12 +249,34 @@ class TestFtGData:
         assert end1.prevsize == 512
         assert end1.size == 0
 
+    def test_ft_gdata_set_area3(self, libmalloc):
+        area = (c.c_uint8 * 4096)()
+        for i, _ in enumerate(area):
+            area[i] = 12
+        start0 = c.cast(area, c.POINTER(T_GData)).contents
+        end0 = c.cast(c.addressof(area) + 512 - 16, c.POINTER(T_GData)).contents
+        start1 = c.cast(c.addressof(area) + 512, c.POINTER(T_GData)).contents
+        end1 = c.cast(c.addressof(area) + 1024 - 16, c.POINTER(T_GData)).contents
+        start2 = c.cast(c.addressof(area) + 1024, c.POINTER(T_GData)).contents
+        end2 = c.cast(c.addressof(area) + 1024 + 512 - 16, c.POINTER(T_GData)).contents
+
         libmalloc.ft_gdata_set_area(c.addressof(area) + 1024, 512, False, False)
         libmalloc.ft_gdata_set_area(c.addressof(area), 512, False, False)
         start2.size = 496 | 0b010
         libmalloc.ft_gdata_set_area(c.addressof(area) + 512, 512, False, True)
         assert start1.size == 512
         assert start2.size == 496 | 0b010
+
+    def test_ft_gdata_set_area4(self, libmalloc):
+        area = (c.c_uint8 * 4096)()
+        for i, _ in enumerate(area):
+            area[i] = 12
+        start0 = c.cast(area, c.POINTER(T_GData)).contents
+        end0 = c.cast(c.addressof(area) + 512 - 16, c.POINTER(T_GData)).contents
+        start1 = c.cast(c.addressof(area) + 512, c.POINTER(T_GData)).contents
+        end1 = c.cast(c.addressof(area) + 1024 - 16, c.POINTER(T_GData)).contents
+        start2 = c.cast(c.addressof(area) + 1024, c.POINTER(T_GData)).contents
+        end2 = c.cast(c.addressof(area) + 1024 + 512 - 16, c.POINTER(T_GData)).contents
 
         libmalloc.ft_gdata_set_area(c.addressof(area) + 1024, 512, False, False)
         libmalloc.ft_gdata_set_area(c.addressof(area), 512, False, False)
@@ -255,6 +285,17 @@ class TestFtGData:
         assert start0.size == 3 * 512 - 16
         assert end2.prevsize == 3 * 512 - 16
         assert end2.size == 0
+
+    def test_ft_gdata_set_area5(self, libmalloc):
+        area = (c.c_uint8 * 4096)()
+        for i, _ in enumerate(area):
+            area[i] = 12
+        start0 = c.cast(area, c.POINTER(T_GData)).contents
+        end0 = c.cast(c.addressof(area) + 512 - 16, c.POINTER(T_GData)).contents
+        start1 = c.cast(c.addressof(area) + 512, c.POINTER(T_GData)).contents
+        end1 = c.cast(c.addressof(area) + 1024 - 16, c.POINTER(T_GData)).contents
+        start2 = c.cast(c.addressof(area) + 1024, c.POINTER(T_GData)).contents
+        end2 = c.cast(c.addressof(area) + 1024 + 512 - 16, c.POINTER(T_GData)).contents
 
         libmalloc.ft_gdata_set_area(c.addressof(area) + 1024, 512, False, False)
         libmalloc.ft_gdata_set_area(c.addressof(area), 512, False, False)
