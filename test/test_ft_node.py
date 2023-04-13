@@ -20,7 +20,7 @@ def libmalloc(request):
     lib.ft_tree_delete.argtypes = [c.POINTER(T_Node), c.POINTER(T_Node)]
     lib.ft_tree_delete.restype = c.c_void_p
     lib.ft_tree_search.argtypes = [c.POINTER(T_Node), c.c_uint64]
-    lib.restype = c.c_void_p
+    lib.ft_node_init.argtypes = [c.POINTER(T_Node), c.c_uint64]
     yield lib
     dlclose(lib._handle)
 
@@ -70,6 +70,8 @@ class TestTree:
             node.parent = 0
             node.left = 0
             node.right = 0
+            node.color = 1
+            #libmalloc.ft_node_init(c.pointer(node), 500 - i)
             root = libmalloc.ft_tree_insert(c.cast(root, c.POINTER(T_Node)), c.pointer(node));
             res, _ = validate_rb(root)
             assert res

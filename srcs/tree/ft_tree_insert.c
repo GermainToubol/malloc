@@ -120,7 +120,8 @@ t_node *ft_tree_insert(t_node *root, t_node *new) {
 
     if (root == NULL)
         return (new);
-    tmp = root;
+    tmp  = root;
+    prev = NULL;
     while (tmp != NULL) {
         prev = tmp;
         if (new->size < tmp->size)

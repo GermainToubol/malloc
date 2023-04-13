@@ -15,10 +15,13 @@
  */
 
 #include "ft_gdata.h"
+#include "ft_tree.h"
 
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+
+t_node *g_root = NULL;
 
 /**
  * @fn bool ft_gdata_init(t_gdata *data, size_t size)
@@ -26,7 +29,7 @@
  * @param size: size of the area
  * @return false on success, true on error
  */
-bool ft_gdata_init(t_gdata *data, size_t size) {
+bool    ft_gdata_init(t_gdata *data, size_t size) {
     if (data == NULL)
         return true;
     if (size & BLOCK_MASK)
@@ -34,7 +37,12 @@ bool ft_gdata_init(t_gdata *data, size_t size) {
     data->size = size;
 
     /* If block is not last, write it size on the nextblock prevsize */
-    if (size != 0)
+    if (size != 0) {
         *(uint64_t *)(&data->data[size - sizeof(*data)]) = size;
+        t_node *new;
+        new = (t_node *)(&data->data[0]);
+        ft_node_init(new, new->size);
+        g_root = ft_tree_insert(g_root, new);
+    }
     return (false);
 }

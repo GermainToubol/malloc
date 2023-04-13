@@ -112,7 +112,6 @@ static void _ft_mstack_set_gdata(uint8_t merge, void *ptr, size_t size) {
         ptr -= sizeof(t_mstack);
         prev = false;
     }
-    dprintf(2, "ptr: %p size: %lu merge %hhu\n", ptr, size, merge);
     ft_gdata_set_area(ptr, totsize, prev, next);
 }
 
