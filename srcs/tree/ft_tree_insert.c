@@ -118,8 +118,10 @@ t_node *ft_tree_insert(t_node *root, t_node *new) {
     t_node *tmp;
     t_node *prev;
 
-    if (root == NULL)
+    if (root == NULL) {
+        new->color = COLOR_BLACK;
         return (new);
+    }
     tmp  = root;
     prev = NULL;
     while (tmp != NULL) {

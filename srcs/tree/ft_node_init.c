@@ -31,5 +31,5 @@ void ft_node_init(t_node *node, uint64_t size) {
     node->left   = NULL;
     node->right  = NULL;
     node->size   = size;
-    node->color  = 1;
+    node->color  = COLOR_RED;
 }
