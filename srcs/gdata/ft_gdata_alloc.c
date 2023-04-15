@@ -39,6 +39,7 @@ void *ft_gdata_alloc(t_gdata *data, size_t size, uint8_t type) {
     if ((data->size & BLOCK_OTHER) != 0
         || size > data_size - sizeof(data->size))
         return (NULL);
+
     g_master.sroot = ft_tree_delete(g_master.sroot, (t_node *)data->data);
     if (data_size > size + LARGE_THRESHOLD + sizeof(data->size)) {
         new_size = size + sizeof(data->size);

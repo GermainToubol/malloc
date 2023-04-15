@@ -44,15 +44,17 @@ ifeq (,$(filter test, $(MAKECMDGOALS)))
 	OBJ_DIR	:= objs
 	CFLAGS	+= -fvisibility=hidden
 	HOSTTYPE	?= $(shell uname -m)_$(shell uname -s)
+	IS_TEST := false
 else
 	OBJ_DIR	:= objs.test
+	CFLAGS += -g3
 	HOSTTYPE	?= $(shell uname -m)_$(shell uname -s)
 	HOSTTYPE 	:= $(HOSTTYPE)_test
+	IS_TEST := true
 endif
 
 GENERIC		:= libft_malloc.so
 NAME		:= libft_malloc_$(HOSTTYPE).so
-
 
 OBJ_LST		:= $(SRC_LST:.c=.o)
 OBJS		:= $(addprefix $(OBJ_DIR)/,$(OBJ_LST))
@@ -73,6 +75,8 @@ test-generic:
 $(GENERIC): $(NAME)
 			$(RM) $(GENERIC)
 			ln -s $(NAME) $(GENERIC)
+#			@if [ "$(IS_TEST)" = false ]; then strip -x $(GENERIC) 			\
+#				&& echo "striping the symbols"; fi
 
 $(NAME):	$(OBJS)
 			$(CC) $(INCLUDES) $^ -shared -o $@
