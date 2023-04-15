@@ -31,7 +31,8 @@ LIB			:= $(addprefix -Llib,$(LIB_NAMES)) $(addprefix -l,$(LIB_NAMES)	\
 # -------------------------------------------------------------------------
 SRC_DIR		:= srcs
 SRC_LST		:=	malloc.c													\
-				$(addprefix mstack/,ft_mstack_init.c ft_mstack_extend.c)	\
+				$(addprefix mstack/,ft_mstack_init.c ft_mstack_extend.c		\
+					ft_mstack_findaddr.c)									\
 				$(addprefix gdata/,ft_gdata_init.c ft_gdata_free.c			\
 					ft_gdata_alloc.c ft_gdata_set_area.c)					\
 				$(addprefix tree/,ft_tree_insert.c ft_tree_search.c 		\

@@ -37,6 +37,8 @@ def libmalloc(request):
         ctypes.c_size_t
         ]
     lib.ft_mstack_extend.restype = ctypes.POINTER(T_MStack)
+    lib.ft_mstack_findaddr.argtypes = [ctypes.POINTER(T_MStack), ctypes.c_void_p]
+    lib.ft_mstack_findaddr.restype = ctypes.c_void_p
     yield (lib)
     dlclose(lib._handle)
 
@@ -190,3 +192,36 @@ class TestMStack:
         for i in range(17):
             root = libmalloc.ft_mstack_extend(root, 4096 * (i + 1))
             assert valid_applications(root)
+
+    def test_findaddr0(self, libmalloc):
+        addr = libmalloc.ft_mstack_findaddr(ctypes.POINTER(T_MStack)(), None)
+        assert addr is None
+
+        mstack = T_MStack()
+        mstack.size = 15 + ctypes.sizeof(T_MStack)
+        addr = libmalloc.ft_mstack_findaddr(ctypes.pointer(mstack),
+            ctypes.addressof(mstack))
+        assert addr is None
+
+        addr = libmalloc.ft_mstack_findaddr(ctypes.pointer(mstack),
+            ctypes.addressof(mstack) - 1)
+        assert addr == ctypes.addressof(mstack)
+
+        addr = libmalloc.ft_mstack_findaddr(ctypes.pointer(mstack),
+            ctypes.addressof(mstack) - 16)
+        assert addr is None
+
+        addr = libmalloc.ft_mstack_findaddr(ctypes.pointer(mstack),
+            ctypes.addressof(mstack) - 15)
+        assert addr == ctypes.addressof(mstack)
+
+    def test_findaddr1(self, libmalloc):
+        tab = (T_MStack * 5)()
+        for i in range(len(tab)):
+            if (i != 0):
+                tab[i].previous = ctypes.addressof(tab[i - 1])
+            if (i != len(tab) -1):
+                tab[i].next = ctypes.addressof(tab[i + 1])
+            tab[i].size = 1 + ctypes.sizeof(T_MStack);
+        addr = libmalloc.ft_mstack_findaddr(ctypes.pointer(tab[0]), ctypes.addressof(tab[3]) - 1)
+        assert addr == ctypes.addressof(tab[3])
