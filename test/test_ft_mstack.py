@@ -219,9 +219,9 @@ class TestMStack:
         tab = (T_MStack * 5)()
         for i in range(len(tab)):
             if (i != 0):
-                tab[i].previous = ctypes.addressof(tab[i - 1])
+                tab[i].next = ctypes.addressof(tab[i - 1])
             if (i != len(tab) -1):
-                tab[i].next = ctypes.addressof(tab[i + 1])
+                tab[i].previous = ctypes.addressof(tab[i + 1])
             tab[i].size = 1 + ctypes.sizeof(T_MStack);
-        addr = libmalloc.ft_mstack_findaddr(ctypes.pointer(tab[0]), ctypes.addressof(tab[3]) - 1)
+        addr = libmalloc.ft_mstack_findaddr(ctypes.pointer(tab[-1]), ctypes.addressof(tab[3]) - 1)
         assert addr == ctypes.addressof(tab[3])

@@ -27,9 +27,8 @@
  * @return address of the block containing the address or NULL if not found
  */
 t_mstack *ft_mstack_findaddr(t_mstack *root, void *addr) {
-    while (root != NULL) {
-        if ((uintptr_t)root - root->size + sizeof(*root) <= (uintptr_t)addr
-            && (uintptr_t)root > (uintptr_t)addr)
+    while (root != NULL && (uintptr_t)addr < (uintptr_t) root) {
+        if ((uintptr_t)root - root->size + sizeof(*root) <= (uintptr_t)addr)
             return (root);
         root = root->next;
     }

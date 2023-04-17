@@ -30,7 +30,8 @@ t_gdata *ft_gdata_findaddr(t_gdata *root, void *addr) {
 
     if (root == NULL)
         return (NULL);
-    while ((root->size & ~BLOCK_MASK) != 0) {
+    while ((uintptr_t)root < (uintptr_t)addr
+		   && (root->size & ~BLOCK_MASK) != 0) {
         size = (root->size & ~BLOCK_MASK);
         if ((uintptr_t)&root->size <= (uintptr_t)addr
             && (uintptr_t)addr < (uintptr_t)&root->size + size)
