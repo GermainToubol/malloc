@@ -30,6 +30,8 @@ def libmalloc(request):
         lib._ft_gdata_merge.argtypes = [c.POINTER(T_GData)]
         lib._ft_gdata_merge.restype = c.c_uint8
     lib.ft_gdata_set_area.argtypes = [c.c_void_p, c.c_size_t, c.c_bool, c.c_bool]
+    lib.ft_gdata_findaddr.argtypes = [c.POINTER(T_GData), c.c_void_p]
+    lib.ft_gdata_findaddr.restype = c.c_void_p
     yield (lib)
     dlclose(lib._handle)
 
@@ -306,3 +308,14 @@ class TestFtGData:
         assert start0.size == 512 - 16
         assert end2.prevsize == 512 - 16
         assert end2.size == 0
+
+    def test_ft_gdata_findaddr(self, libmalloc):
+        tab = (T_GData * 5)()
+        self._init_tab(tab)
+
+        assert libmalloc.ft_gdata_findaddr(c.POINTER(T_GData)(), 12) is None
+        assert libmalloc.ft_gdata_findaddr(c.pointer(tab[0]), c.addressof(tab[1])) == c.addressof(tab[0])
+        assert libmalloc.ft_gdata_findaddr(c.pointer(tab[0]), c.addressof(tab[1]) + 7) == c.addressof(tab[0])
+        assert libmalloc.ft_gdata_findaddr(c.pointer(tab[0]), c.addressof(tab[1]) + 8) == c.addressof(tab[1])
+        assert libmalloc.ft_gdata_findaddr(c.pointer(tab[0]), c.addressof(tab[-1])) == c.addressof(tab[-2])
+        assert libmalloc.ft_gdata_findaddr(c.pointer(tab[0]), c.addressof(tab[-1]) + 8) is None

@@ -35,5 +35,6 @@ typedef struct s_mstack {
 /* Functions *****************************************************************/
 void      ft_mstack_init(t_mstack *current, size_t size);
 t_mstack *ft_mstack_extend(t_mstack *root, size_t size);
+t_mstack *ft_mstack_findaddr(t_mstack *root, void *addr);
 
 #endif /* FT_MSTACK_H */
