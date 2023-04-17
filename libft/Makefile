@@ -29,6 +29,7 @@ SRCS =	$(NSRCS) ft_calloc.c ft_printf.c ft_free_split.c ft_itoa.c 			\
 		ft_isspace.c ft_atoll.c
 
 OBJS = $(addprefix $(OBJS_D)/,$(SRCS:.c=.o))
+SOBJS= $(OBJS:.o=.s.o)
 TEST = $(addprefix $(TEST_D)/,$(NSRCS:.c=.test))
 
 SRCS_D = ./srcs
@@ -41,8 +42,14 @@ CFLAGS = -Wall -Wextra -Werror
 INCLUDES = $(addprefix -I,$(INCL_D))
 
 NAME = libft.a
+SHARED = $(NAME:.a=.so)
 
 all: $(NAME)
+
+shared: $(SHARED)
+
+$(SHARED): $(SOBJS)
+	$(CC) $(CLFAGS) $(INCLUDES) -shared -o $@ $^
 
 $(NAME): $(OBJS)
 	ar rcs $@ $^
@@ -53,18 +60,24 @@ $(OBJS_D)/%.o: $(SRCS_D)/%.c Makefile
 	fi
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
+$(OBJS_D)/%.s.o: $(SRCS_D)/%.c Makefile
+	@if [ ! -d $(dir $@) ]; then				\
+		mkdir -p $(dir $@);						\
+	fi
+	$(CC) $(CFLAGS) -fPIC $(INCLUDES) -c $< -o $@
+
 %.test: %.c $(NAME)
 	$(CC) $(CFLAGS) $(INCLUDES) $< -L. -lft -lbsd -o $@
 
 clean:
-	$(RM) $(OBJS)
+	$(RM) $(OBJS) $(SOBJS)
 	$(RM) -d $(OBJS_D)
 
 tclean:
 	$(RM) $(TEST)
 
 fclean: clean tclean
-	$(RM) $(NAME)
+	$(RM) $(NAME) $(SHARED)
 
 re: fclean all
 
@@ -73,4 +86,4 @@ test: $(TEST)
 		$$file;					\
 	done;
 
-.PHONY: all clean fclean re test
+.PHONY: all clean fclean re test shared tclean
