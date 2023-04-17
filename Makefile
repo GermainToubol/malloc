@@ -37,7 +37,8 @@ SRC_LST		:=	malloc.c free.c												\
 					ft_gdata_alloc.c ft_gdata_set_area.c					\
 					ft_gdata_findaddr.c)									\
 				$(addprefix tree/,ft_tree_insert.c ft_tree_search.c 		\
-					ft_node_init.c)
+					ft_node_init.c)											\
+				$(addprefix dump/,show_alloc_mem.c)
 SRCS		:= $(addprefix $(SRC_DIR)/,$(SRC_LST))
 
 # List of all object files (.o)

@@ -23,8 +23,7 @@
 
 t_root g_master = { .mroot = NULL, .sroot = NULL };
 
-__attribute__((__visibility__("default")))
-void *ft_malloc(size_t size) {
+__attribute__((__visibility__("default"))) void *ft_malloc(size_t size) {
     t_node * node;
     t_gdata *data;
 
@@ -47,5 +46,5 @@ void *ft_malloc(size_t size) {
         }
     }
     data = (t_gdata *)node - 1;
-    return (ft_gdata_alloc(data, size, BLOCK_OTHER));
+    return (ft_gdata_alloc(data, size, 3));
 }
