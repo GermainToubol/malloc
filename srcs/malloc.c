@@ -23,7 +23,8 @@
 
 t_root g_master = { .mroot = NULL, .sroot = NULL };
 
-void * malloc(size_t size) {
+__attribute__((__visibility__("default")))
+void *ft_malloc(size_t size) {
     t_node * node;
     t_gdata *data;
 

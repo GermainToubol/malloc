@@ -20,6 +20,7 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include <libft.h>
 
 #define BACK_MERGE    0b01
 #define FORWARD_MERGE 0b10
@@ -54,8 +55,8 @@ static uint8_t _ft_gdata_merge(t_gdata *data) {
             ft_tree_delete(g_master.sroot, (t_node *)previous->data);
         previous->size += data->size;
         size           = previous->size & ~BLOCK_MASK;
-        next           = (t_gdata *)(&previous->data[size - sizeof(*data)]);
         next->prevsize = size;
+		data = previous;
         ret |= BACK_MERGE;
     }
     ft_node_init((t_node *)data->data, data->size);
@@ -81,5 +82,5 @@ void ft_gdata_free(t_gdata *data) {
     next           = (t_gdata *)&data->data[size - sizeof(*data)];
     next->prevsize = size;
     next->size &= ~BLOCK_USED;
-    _ft_gdata_merge(data);
+	_ft_gdata_merge(data);
 }

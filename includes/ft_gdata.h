@@ -51,5 +51,6 @@ bool  ft_gdata_init(t_gdata *data, size_t size);
 void  ft_gdata_free(t_gdata *data);
 void  ft_gdata_set_area(void *area, size_t size, bool prev, bool next);
 void *ft_gdata_alloc(t_gdata *data, size_t size, uint8_t type);
+t_gdata *ft_gdata_findaddr(t_gdata *root, void *addr);
 
 #endif /* FT_GDATA_H */

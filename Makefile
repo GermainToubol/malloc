@@ -13,7 +13,7 @@
 # Compilation options
 # -------------------------------------------------------------------------
 CC			:= gcc
-CFLAGS		:= -Wall -Wextra -Werror -fPIC
+CFLAGS		:= -Wall -Wextra -Werror -fPIC -g3
 SHELL		:= /bin/bash
 
 # List of all inclusions (.h and .a)
@@ -22,7 +22,7 @@ INCLUDE_DIR	:= includes libft/includes
 INCLUDES	:= $(addprefix -I,$(INCLUDE_DIR))
 
 LIB_NAMES	:= ft
-LIB_FILES	:= $(foreach l,$(LIB_NAMES),lib$l/lib$l.a)
+LIB_FILES	:= $(foreach l,$(LIB_NAMES),lib$l/lib$l.so)
 EXT_LIB		:=
 LIB			:= $(addprefix -Llib,$(LIB_NAMES)) $(addprefix -l,$(LIB_NAMES)	\
 					$(EXT_LIB))
@@ -30,7 +30,7 @@ LIB			:= $(addprefix -Llib,$(LIB_NAMES)) $(addprefix -l,$(LIB_NAMES)	\
 # List of all sources (.c)
 # -------------------------------------------------------------------------
 SRC_DIR		:= srcs
-SRC_LST		:=	malloc.c													\
+SRC_LST		:=	malloc.c free.c												\
 				$(addprefix mstack/,ft_mstack_init.c ft_mstack_extend.c		\
 					ft_mstack_findaddr.c)									\
 				$(addprefix gdata/,ft_gdata_init.c ft_gdata_free.c			\
@@ -80,8 +80,8 @@ $(GENERIC): $(NAME)
 #			@if [ "$(IS_TEST)" = false ]; then strip -x $(GENERIC) 			\
 #				&& echo "striping the symbols"; fi
 
-$(NAME):	$(OBJS)
-			$(CC) $(INCLUDES) $^ -shared -o $@
+$(NAME):	$(OBJS) $(LIB_FILES)
+			$(CC) $(INCLUDES) $(OBJS) -shared -o $@ -lft -L./libft -Wl,-rpath=./libft
 
 $(OBJ_DIR)/%.o:	$(SRC_DIR)/%.c start_compiling
 			@mkdir -p $(dir $@)
@@ -129,6 +129,10 @@ docclean:
 %.a:		build_libs
 			@echo -e "$(_GREEN)$(dir $@): make$(_NO_COLOR)"
 			$(MAKE) --no-print-directory -C $(dir $@)
+
+%.so:		build_libs
+			@echo -e "$(_GREEN)$(dir $@): make$(_NO_COLOR)"
+			$(MAKE) --no-print-directory -C $(dir $@) shared
 
 # Parameters
 # -------------------------------------------------------------------------

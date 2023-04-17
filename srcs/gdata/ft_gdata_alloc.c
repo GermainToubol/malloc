@@ -23,7 +23,7 @@
 /**
  * @fn ft_gdata_alloc(t_gdata *data, size_t size, uint8_t type)
  * @param data: base chunk
- * @param size: requested size
+ * @param size: requested size - sizeof(data->previous)
  * @param type: type of use of the chunk
  * @return the address of the gdata->data on success, NULL otherwise
  */
@@ -40,9 +40,11 @@ void *ft_gdata_alloc(t_gdata *data, size_t size, uint8_t type) {
         || size > data_size - sizeof(data->size))
         return (NULL);
 
+    next = (t_gdata *)(&data->data[data_size - sizeof(*data)]);
+    next->size |= BLOCK_USED;
     g_master.sroot = ft_tree_delete(g_master.sroot, (t_node *)data->data);
     if (data_size > size + LARGE_THRESHOLD + sizeof(data->size)) {
-        new_size = size + sizeof(data->size);
+        new_size = size + sizeof(*data);
         if ((new_size & BLOCK_OTHER) != 0) {
             new_size += 8;
             new_size &= ~BLOCK_OTHER;
@@ -58,7 +60,5 @@ void *ft_gdata_alloc(t_gdata *data, size_t size, uint8_t type) {
     }
     data_size = data->size & ~BLOCK_MASK;
     data->size |= (type << 1);
-    next = (t_gdata *)(&data->data[data_size - sizeof(*data)]);
-    next->size |= BLOCK_USED;
     return (data->data);
 }
