@@ -17,6 +17,7 @@
 
 #include "ft_gdata.h"
 #include "ft_mstack.h"
+#include "libft.h"
 
 #include <stdbool.h>
 #include <stddef.h>

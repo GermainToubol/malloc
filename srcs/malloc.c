@@ -27,7 +27,7 @@ __attribute__((__visibility__("default"))) void *ft_malloc(size_t size) {
     t_node * node;
     t_gdata *data;
 
-    size += sizeof(data->size);
+    size -= sizeof(data->size);
     if ((size & 7) != 0) {
         size += 8;
         size &= ~7;

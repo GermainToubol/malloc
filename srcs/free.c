@@ -17,21 +17,24 @@
 #include "ft_gdata.h"
 #include "ft_malloc.h"
 #include "ft_mstack.h"
+#include "libft.h"
 
-__attribute__((__visibility__("default")))
-void ft_free(void *addr){
+__attribute__((__visibility__("default"))) void ft_free(void *addr) {
     t_mstack *mstack;
-	t_gdata *gdata;
+    t_gdata * gdata;
 
     if (addr == NULL)
-		return ;
-	mstack = ft_mstack_findaddr(g_master.mroot, addr);
-	if (mstack == NULL)
-		return ;
-	gdata = ft_gdata_findaddr((t_gdata *)((uintptr_t)mstack
-										  - mstack->size + sizeof(*mstack)), addr);
-	if (gdata == NULL
-		|| (uintptr_t)&gdata->data != (uintptr_t)addr)
-		return ;
-	ft_gdata_free(gdata);
+        return;
+    mstack = ft_mstack_findaddr(g_master.mroot, addr);
+    if (mstack == NULL)
+        return;
+    gdata = ft_gdata_findaddr(
+        (t_gdata *)((uintptr_t)mstack - mstack->size + sizeof(*mstack)),
+        addr);
+    if (gdata == NULL || (uintptr_t)&gdata->data != (uintptr_t)addr)
+        return;
+    ft_gdata_free(gdata);
+    if (mstack->next == NULL) {
+        ft_mstack_unmap(mstack);
+    }
 }

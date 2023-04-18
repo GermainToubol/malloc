@@ -13,7 +13,7 @@
 # Compilation options
 # -------------------------------------------------------------------------
 CC			:= gcc
-CFLAGS		:= -Wall -Wextra -Werror -fPIC -g3
+CFLAGS		:= -Wall -Wextra -Werror -fPIC
 SHELL		:= /bin/bash
 
 # List of all inclusions (.h and .a)
@@ -32,7 +32,7 @@ LIB			:= $(addprefix -Llib,$(LIB_NAMES)) $(addprefix -l,$(LIB_NAMES)	\
 SRC_DIR		:= srcs
 SRC_LST		:=	malloc.c free.c												\
 				$(addprefix mstack/,ft_mstack_init.c ft_mstack_extend.c		\
-					ft_mstack_findaddr.c)									\
+					ft_mstack_findaddr.c ft_mstack_unmap.c)					\
 				$(addprefix gdata/,ft_gdata_init.c ft_gdata_free.c			\
 					ft_gdata_alloc.c ft_gdata_set_area.c					\
 					ft_gdata_findaddr.c)									\
@@ -78,11 +78,11 @@ test-generic:
 $(GENERIC): $(NAME)
 			$(RM) $(GENERIC)
 			ln -s $(NAME) $(GENERIC)
-#			@if [ "$(IS_TEST)" = false ]; then strip -x $(GENERIC) 			\
-#				&& echo "striping the symbols"; fi
+			@if [ "$(IS_TEST)" = false ]; then strip -x $(GENERIC) 			\
+				&& echo "striping the symbols"; fi
 
 $(NAME):	$(OBJS) $(LIB_FILES)
-			$(CC) $(INCLUDES) $(OBJS) -shared -o $@ -lft -L./libft -Wl,-rpath=./libft
+			$(CC) $(INCLUDES) $(OBJS) $(CFLAGS) -shared -o $@ -lft -L./libft -Wl,-rpath=./libft
 
 $(OBJ_DIR)/%.o:	$(SRC_DIR)/%.c start_compiling
 			@mkdir -p $(dir $@)
