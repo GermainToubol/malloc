@@ -16,6 +16,7 @@
 #ifndef FT_MALLOC_H
 #define FT_MALLOC_H
 
+#include "ft_heap.h"
 #include "ft_mstack.h"
 #include "ft_tree.h"
 
@@ -26,8 +27,10 @@
  * @brief contains the information about the roots
  */
 typedef struct s_root {
-    t_mstack *mroot; /*!< Root of memory stack */
-    t_node *  sroot; /*!< Root of tree */
+    t_mstack *mroot;  /*!< Root of memory stack */
+    t_node *  sroot;  /*!< Root of tree */
+    t_queue   qtiny;  /*!< Tiny blocks priority queue */
+    t_queue   qsmall; /*!< Small blocks priority queue */
 } t_root;
 
 extern t_root g_master;

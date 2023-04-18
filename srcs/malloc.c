@@ -21,7 +21,20 @@
 
 #include <stddef.h>
 
-t_root g_master = { .mroot = NULL, .sroot = NULL };
+/* clang-format off */
+t_root g_master = {
+    .mroot = NULL,
+    .sroot = NULL,
+    .qtiny = {
+        .head = NULL,
+        .tail = NULL
+    },
+    .qsmall = {
+        .head = NULL,
+        .tail = NULL
+    }
+};
+/* clang-format on */
 
 __attribute__((__visibility__("default"))) void *ft_malloc(size_t size) {
     t_node * node;
