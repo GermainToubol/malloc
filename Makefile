@@ -30,7 +30,7 @@ LIB			:= $(addprefix -Llib,$(LIB_NAMES)) $(addprefix -l,$(LIB_NAMES)	\
 # List of all sources (.c)
 # -------------------------------------------------------------------------
 SRC_DIR		:= srcs
-SRC_LST		:=	malloc.c free.c												\
+SRC_LST		:= malloc.c free.c												\
 				$(addprefix mstack/,ft_mstack_init.c ft_mstack_extend.c		\
 					ft_mstack_findaddr.c ft_mstack_unmap.c)					\
 				$(addprefix gdata/,ft_gdata_init.c ft_gdata_free.c			\
@@ -38,7 +38,9 @@ SRC_LST		:=	malloc.c free.c												\
 					ft_gdata_findaddr.c)									\
 				$(addprefix tree/,ft_tree_insert.c ft_tree_search.c 		\
 					ft_node_init.c)											\
-				$(addprefix dump/,show_alloc_mem.c)
+				$(addprefix dump/,show_alloc_mem.c)							\
+				$(addprefix heap/,ft_heap_swap_nodes.c ft_queue_push.c		\
+					ft_queue_pop.c)
 SRCS		:= $(addprefix $(SRC_DIR)/,$(SRC_LST))
 
 # List of all object files (.o)

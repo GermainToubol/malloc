@@ -28,6 +28,7 @@ typedef struct s_heap {
     struct s_heap *parent; /*!< parent node */
     struct s_heap *left;   /*!< left son */
     struct s_heap *right;  /*!< right son */
+    struct s_heap *prev;   /*!< previous node */
     struct s_heap *next;   /*!< next node  */
 } t_heap;
 
@@ -39,5 +40,10 @@ typedef struct s_queue {
     struct s_heap *head; /*!< Top node of the heap */
     struct s_heap *tail; /*!< Last node of the heap */
 } t_queue;
+
+/* Functions *****************************************************************/
+void ft_queue_push(t_queue *queue, t_heap *node);
+void ft_heap_swap_nodes(t_queue *queue, t_heap *a, t_heap *b);
+void ft_queue_pop(t_queue *queue);
 
 #endif /* FT_HEAP_H */
