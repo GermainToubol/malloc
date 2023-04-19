@@ -17,9 +17,13 @@
 #include "ft_gdata.h"
 #include "ft_malloc.h"
 #include "ft_mstack.h"
+#include "ft_tiny.h"
 #include "ft_tree.h"
+#include "libft.h"
 
 #include <stddef.h>
+#include <stdint.h>
+#include <unistd.h>
 
 /* clang-format off */
 t_root g_master = {
@@ -36,28 +40,71 @@ t_root g_master = {
 };
 /* clang-format on */
 
-__attribute__((__visibility__("default"))) void *ft_malloc(size_t size) {
+static t_node *_node_from_extension(size_t size) {
+    t_mstack *stack_tmp;
+    stack_tmp = ft_mstack_extend(g_master.mroot, size + sizeof(t_mstack));
+    if (stack_tmp == NULL) {
+        return (NULL);
+    }
+    g_master.mroot = stack_tmp;
+    return (ft_tree_search(g_master.sroot, size));
+}
+
+static void *_malloc_large(size_t size) {
     t_node * node;
     t_gdata *data;
 
     size -= sizeof(data->size);
-    if ((size & 7) != 0) {
-        size += 8;
-        size &= ~7;
-    }
     node = ft_tree_search(g_master.sroot, size);
     if (node == NULL) {
-        t_mstack *stack_tmp;
-        stack_tmp = ft_mstack_extend(g_master.mroot, size + sizeof(t_mstack));
-        if (stack_tmp == NULL) {
-            return (NULL);
-        }
-        g_master.mroot = stack_tmp;
-        node           = ft_tree_search(g_master.sroot, size);
+        node = _node_from_extension(size);
         if (node == NULL) {
             return (NULL);
         }
     }
     data = (t_gdata *)node - 1;
     return (ft_gdata_alloc(data, size, 3));
+}
+
+static void *_malloc_tiny(void) {
+    t_tiny *tiny;
+    tiny = (t_tiny *)((uintptr_t)g_master.qtiny.head);
+    if (g_master.qtiny.head == NULL) {
+        t_node * node;
+        t_gdata *data;
+        size_t   ext_size;
+
+        ext_size = getpagesize() - sizeof(data->size);
+        node     = ft_tree_search(g_master.sroot, ext_size);
+        if (node == NULL) {
+            node = _node_from_extension(ext_size);
+            if (node == NULL) {
+                return (NULL);
+            }
+        }
+        data = (t_gdata *)node - 1;
+        tiny = ft_gdata_alloc(data, ext_size, 1);
+        if (tiny == NULL)
+            return (NULL);
+        ft_tiny_init(tiny);
+    }
+    return (ft_tiny_alloc((t_tiny *)g_master.qtiny.head));
+}
+
+static void *_malloc_small(size_t size) {
+    (void)size;
+    return (NULL);
+}
+
+__attribute__((__visibility__("default"))) void *ft_malloc(size_t size) {
+    if ((size & 7) != 0) {
+        size += 8;
+        size &= ~7;
+    }
+
+    if (size <= TINY_THRESHOLD)
+        return (_malloc_tiny());
+    if (size <= LARGE_THRESHOLD)
+        return (_malloc_small(size));
+    return (_malloc_large(size));
 }

@@ -29,7 +29,7 @@ void ft_tiny_init(t_tiny *chunk) {
     if (chunk == NULL)
         return;
     chunk->node     = (t_heap) { NULL, NULL, NULL, NULL, NULL };
-    chunk->table[0] = (uint64_t)-1;
-    chunk->table[1] = ~((uint64_t)-1 << (N_TINYS - 64));
+    chunk->table[0] = TINY_MASK_A;
+    chunk->table[1] = TINY_MASK_B;
     ft_queue_push(&g_master.qtiny, &chunk->node);
 }

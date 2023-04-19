@@ -36,6 +36,9 @@
 
 #define N_TINYS         101
 
+#define TINY_MASK_A     ((uint64_t)-1)
+#define TINY_MASK_B     (~((uint64_t)-1 << (N_TINYS - 64)))
+
 /**
  * @typedef t_tiny_data
  * @brief Allocated chunk on a single tiny allocation request
