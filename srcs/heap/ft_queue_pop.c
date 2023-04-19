@@ -31,9 +31,7 @@ static void _remove_tail(t_queue *queue) {
     queue->tail      = node->prev;
 }
 
-static void _heap_balance_down(t_queue *queue) {
-    t_heap *node = queue->head;
-
+static void _heap_balance_down(t_queue *queue, t_heap *node) {
     while ((uintptr_t)node < (uintptr_t)node->left
            || (uintptr_t)node < (uintptr_t)node->right) {
         if ((uintptr_t)node->right < (uintptr_t)node->left)
@@ -60,5 +58,31 @@ void ft_queue_pop(t_queue *queue) {
 
     ft_heap_swap_nodes(queue, queue->head, queue->tail);
     _remove_tail(queue);
-    _heap_balance_down(queue);
+    _heap_balance_down(queue, queue->head);
+}
+
+/**
+ * @fn void ft_queue_remove_node(t_queue *queue, t_heap *node)
+ * @param queue: current queue
+ * @param node: node to remove
+ */
+void ft_queue_remove_node(t_queue *queue, t_heap *node) {
+    if (node == NULL || queue == NULL)
+        return;
+
+    if (node == queue->head) {
+        ft_queue_pop(queue);
+        return;
+    }
+
+    if (node == queue->tail) {
+        _remove_tail(queue);
+        return;
+    }
+
+    t_heap *tmp;
+    tmp = queue->tail;
+    ft_heap_swap_nodes(queue, node, queue->tail);
+    _remove_tail(queue);
+    _heap_balance_down(queue, tmp);
 }

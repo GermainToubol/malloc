@@ -45,5 +45,6 @@ typedef struct s_queue {
 void ft_queue_push(t_queue *queue, t_heap *node);
 void ft_heap_swap_nodes(t_queue *queue, t_heap *a, t_heap *b);
 void ft_queue_pop(t_queue *queue);
+void ft_queue_remove_node(t_queue *queue, t_heap *node);
 
 #endif /* FT_HEAP_H */
