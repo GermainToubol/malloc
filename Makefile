@@ -40,7 +40,9 @@ SRC_LST		:= malloc.c free.c												\
 					ft_node_init.c)											\
 				$(addprefix dump/,show_alloc_mem.c)							\
 				$(addprefix heap/,ft_heap_swap_nodes.c ft_queue_push.c		\
-					ft_queue_pop.c)
+					ft_queue_pop.c)											\
+				$(addprefix tiny/,ft_tiny_init.c ft_tiny_alloc.c			\
+					ft_tiny_free.c)
 SRCS		:= $(addprefix $(SRC_DIR)/,$(SRC_LST))
 
 # List of all object files (.o)
