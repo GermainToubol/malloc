@@ -30,7 +30,7 @@ LIB			:= $(addprefix -Llib,$(LIB_NAMES)) $(addprefix -l,$(LIB_NAMES)	\
 # List of all sources (.c)
 # -------------------------------------------------------------------------
 SRC_DIR		:= srcs
-SRC_LST		:= malloc.c free.c												\
+SRC_LST		:= malloc.c free.c realloc.c									\
 				$(addprefix mstack/,ft_mstack_init.c ft_mstack_extend.c		\
 					ft_mstack_findaddr.c ft_mstack_unmap.c)					\
 				$(addprefix gdata/,ft_gdata_init.c ft_gdata_free.c			\

@@ -52,7 +52,13 @@ static void _show_block_small(uint8_t *data, uint64_t *totsize) {
 }
 
 static void _show_block_other(t_gdata *gdata) {
-    ft_printf("%p: %u bytes\n", gdata->data, REAL_SIZE(gdata));
+    if (REAL_SIZE(gdata) > (uint32_t)-1)
+        ft_printf("%p: %u%09u bytes\n",
+                  gdata->data,
+                  REAL_SIZE(gdata) >> 32,
+                  (uint32_t)REAL_SIZE(gdata));
+    else
+        ft_printf("%p: %u bytes\n", gdata->data, REAL_SIZE(gdata));
 }
 
 enum e_state

@@ -137,7 +137,7 @@ t_mstack *ft_mstack_extend(t_mstack *root, size_t size) {
                -1,
                0);
 
-    if (new == NULL)
+    if (new == MAP_FAILED)
         return (NULL);
     ptr = new;
     new = (t_mstack *)((uint8_t *)new + len - sizeof(t_mstack));
