@@ -129,7 +129,7 @@ class TestFtGData:
         libmalloc.ft_gdata_free(c.pointer(tab[1]))
         libmalloc.ft_gdata_free(c.pointer(tab[2]))
         libmalloc.ft_gdata_free(c.pointer(tab[3]))
-        assert libmalloc.ft_gdata_alloc(c.pointer(tab[1]), 504, 3) == c.addressof(tab[1].data)
+        assert libmalloc.ft_gdata_alloc(c.pointer(tab[1]), 505, 3) == c.addressof(tab[1].data)
         assert tab[1].size == 256 * 3 | 0b110 | 1
 
     # ______________________________________________________________________

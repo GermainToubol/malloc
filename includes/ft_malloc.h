@@ -18,11 +18,12 @@
 
 #include "ft_heap.h"
 #include "ft_mstack.h"
+#include "ft_small.h"
 #include "ft_tiny.h"
 #include "ft_tree.h"
 
 #define TINY_THRESHOLD  TINY_DATA_SIZE
-#define LARGE_THRESHOLD 256
+#define LARGE_THRESHOLD SMALL_DATA_SIZE
 
 /**
  * @struct t_root
