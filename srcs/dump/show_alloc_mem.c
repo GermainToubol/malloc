@@ -25,8 +25,6 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#define REAL_SIZE(x) (x->size & ~BLOCK_MASK)
-
 static void _show_block_tiny(uint8_t *data, uint64_t *totsize) {
     t_tiny *tiny;
 

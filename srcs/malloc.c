@@ -119,16 +119,16 @@ static void *_malloc_small(void) {
     return (ft_small_alloc((t_small *)g_master.qsmall.head));
 }
 
-__attribute__((__visibility__("default"))) void *ft_malloc(size_t size) {
-    if ((size & 7) != 0) {
-        size += 8;
-        size &= ~7;
-    }
+__attribute__((__visibility__("default"))) void *malloc(size_t size) {
     if (size == 0)
         return (NULL);
     if (size <= TINY_THRESHOLD)
         return (_malloc_tiny());
     if (size <= LARGE_THRESHOLD)
         return (_malloc_small());
+    if ((size & 7) != 0) {
+        size += 8;
+        size &= ~7;
+    }
     return (_malloc_large(size));
 }

@@ -38,8 +38,10 @@ typedef struct s_root {
 
 extern t_root g_master;
 
-void *        malloc(size_t size);
-void          free(void *addr);
-void *        realloc(void *addr, size_t size);
+#define REAL_SIZE(x) (x->size & ~BLOCK_MASK)
+
+void *malloc(size_t size);
+void  free(void *addr);
+void *realloc(void *addr, size_t size);
 
 #endif /* FT_MALLOC_H */

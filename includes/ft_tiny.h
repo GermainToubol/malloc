@@ -20,6 +20,7 @@
 
 #include "ft_heap.h"
 
+#include <stdbool.h>
 #include <stdint.h>
 
 /**
@@ -59,5 +60,6 @@ void  ft_tiny_init(t_tiny *tiny);
 void *ft_tiny_alloc(t_tiny *block);
 void  ft_tiny_free(t_tiny *block, void *addr);
 void  ft_tiny_delete(t_tiny *chunk);
+bool  ft_istiny(t_tiny *block, void *addr);
 
 #endif /* FT_TINY_H */

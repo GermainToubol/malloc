@@ -18,26 +18,38 @@
 #include "ft_malloc.h"
 #include "ft_small.h"
 
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 
 #define M64(x) (x & 63)
 #define D64(x) (x >> 6)
 
+bool ft_issmall(t_small *block, void *addr) {
+    uint64_t offset;
+
+    if (addr == NULL || block == NULL)
+        return (false);
+
+    offset = (uintptr_t)addr - (uintptr_t)block->data;
+    if (offset % SMALL_DATA_SIZE != 0)
+        return (false);
+    offset /= SMALL_DATA_SIZE;
+    if (offset >= N_SMALLS)
+        return (false);
+    return (true);
+}
+
 /**
  * @fn void ft_small_free(t_small *block, void *addr)
  */
 void ft_small_free(t_small *block, void *addr) {
-    if (addr == NULL || block == NULL)
+    if (!ft_issmall(block, addr))
         return;
     uint64_t offset;
 
     offset = (uintptr_t)addr - (uintptr_t)block->data;
-    if (offset % SMALL_DATA_SIZE != 0)
-        return;
     offset /= SMALL_DATA_SIZE;
-    if (offset >= N_SMALLS)
-        return;
     if (block->table[0] == 0 && block->table[1] == 0)
         ft_queue_push(&g_master.qsmall, &block->node);
     block->table[D64(offset)] |= ((uint64_t)1 << M64(offset));
