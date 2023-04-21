@@ -26,7 +26,7 @@ SRCS =	$(NSRCS) ft_calloc.c ft_printf.c ft_free_split.c ft_itoa.c 			\
 		ft_printf_unsigned.c ft_printf_write.c ft_putchar_fd.c 				\
 		ft_putendl_fd.c ft_putnbr_fd.c ft_putstr_fd.c ft_split.c ft_strdup.c\
 		ft_striteri.c ft_strjoin.c ft_strmapi.c ft_strnstr.c ft_substr.c	\
-		ft_isspace.c ft_atoll.c
+		ft_isspace.c ft_atoll.c ft_fprintf.c
 
 OBJS = $(addprefix $(OBJS_D)/,$(SRCS:.c=.o))
 SOBJS= $(OBJS:.o=.s.o)
