@@ -139,6 +139,7 @@ t_mstack *ft_mstack_extend(t_mstack *root, size_t size) {
 
     if (new == MAP_FAILED)
         return (NULL);
+    // ft_fprintf(1, "mmap %p %u\n", new, len);
     ptr = new;
     new = (t_mstack *)((uint8_t *)new + len - sizeof(t_mstack));
     ft_mstack_init(new, len);

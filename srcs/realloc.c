@@ -34,10 +34,10 @@ void *_realloc_tiny(t_gdata *gdata, void *addr, size_t size) {
         return (NULL);
     if (size <= TINY_THRESHOLD)
         return (addr);
-    ptr = malloc(size);
+    ptr = ft_malloc(size);
     if (ptr != NULL)
         ft_memcpy(ptr, addr, TINY_DATA_SIZE);
-    free(addr);
+    ft_free(addr);
     return (ptr);
 }
 
@@ -50,12 +50,12 @@ void *_realloc_small(t_gdata *gdata, void *addr, size_t size) {
         return (NULL);
     if (size > TINY_THRESHOLD && size <= LARGE_THRESHOLD)
         return (addr);
-    ptr = malloc(size);
+    ptr = ft_malloc(size);
     if (ptr != NULL)
         ft_memcpy(ptr,
                   addr,
                   size < LARGE_THRESHOLD ? TINY_DATA_SIZE : SMALL_DATA_SIZE);
-    free(addr);
+    ft_free(addr);
     return (ptr);
 }
 
@@ -65,13 +65,13 @@ void *_realloc_large(t_gdata *gdata, void *addr, size_t size) {
     if ((uintptr_t)addr != (uintptr_t)gdata->data)
         return (NULL);
     if (size <= LARGE_THRESHOLD) {
-        ptr = malloc(size);
+        ptr = ft_malloc(size);
         if (ptr != NULL)
             ft_memcpy(ptr,
                       addr,
                       size <= TINY_DATA_SIZE ? TINY_DATA_SIZE :
                                                SMALL_DATA_SIZE);
-        free(addr);
+        ft_free(addr);
         return (ptr);
     }
 
@@ -95,7 +95,7 @@ void *_realloc_large(t_gdata *gdata, void *addr, size_t size) {
         new->size = new_size | BLOCK_OTHER | BLOCK_USED;
         gdata->size =
             (REAL_SIZE(gdata) - new_size) | (gdata->size & BLOCK_MASK);
-        free(addr);
+        ft_free(addr);
         return (new->data);
     }
 
@@ -140,19 +140,18 @@ void *_realloc_large(t_gdata *gdata, void *addr, size_t size) {
         base->size = totsize | BLOCK_OTHER | (base->size & BLOCK_USED);
         return (base->data);
     }
-    ptr = malloc(size);
+    ptr = ft_malloc(size);
     if (ptr != NULL)
         ft_memcpy(addr, ptr, REAL_SIZE(gdata) - sizeof(gdata->size));
-    free(addr);
+    ft_free(addr);
     return (ptr);
 }
 
-__attribute__((__visibility__("default"))) void *realloc(void * ptr,
-                                                         size_t size) {
+void *ft_realloc(void *ptr, size_t size) {
     if (ptr == NULL)
-        return (malloc(size));
+        return (ft_malloc(size));
     if (size == 0) {
-        free(ptr);
+        ft_free(ptr);
         return (NULL);
     }
 

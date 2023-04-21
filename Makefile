@@ -12,7 +12,7 @@
 
 # Compilation options
 # -------------------------------------------------------------------------
-CC			:= gcc
+CC			:= cc
 CFLAGS		:= -Wall -Wextra -Werror -fPIC
 SHELL		:= /bin/bash
 
@@ -23,14 +23,14 @@ INCLUDES	:= $(addprefix -I,$(INCLUDE_DIR))
 
 LIB_NAMES	:= ft
 LIB_FILES	:= $(foreach l,$(LIB_NAMES),lib$l/lib$l.so)
-EXT_LIB		:=
+EXT_LIB		:= pthread
 LIB			:= $(addprefix -Llib,$(LIB_NAMES)) $(addprefix -l,$(LIB_NAMES)	\
 					$(EXT_LIB))
 
 # List of all sources (.c)
 # -------------------------------------------------------------------------
 SRC_DIR		:= srcs
-SRC_LST		:= malloc.c free.c realloc.c									\
+SRC_LST		:= malloc.c free.c realloc.c generic.c							\
 				$(addprefix mstack/,ft_mstack_init.c ft_mstack_extend.c		\
 					ft_mstack_findaddr.c ft_mstack_unmap.c)					\
 				$(addprefix gdata/,ft_gdata_init.c ft_gdata_free.c			\

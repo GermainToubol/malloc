@@ -119,7 +119,7 @@ static void *_malloc_small(void) {
     return (ft_small_alloc((t_small *)g_master.qsmall.head));
 }
 
-__attribute__((__visibility__("default"))) void *malloc(size_t size) {
+void *ft_malloc(size_t size) {
     if (size == 0)
         return (NULL);
     if (size <= TINY_THRESHOLD)

@@ -60,7 +60,7 @@ static void _free_large(t_mstack *mstack, t_gdata *gdata, void *addr) {
     }
 }
 
-__attribute__((__visibility__("default"))) void free(void *addr) {
+void ft_free(void *addr) {
     t_mstack *mstack;
     t_gdata * gdata;
 
