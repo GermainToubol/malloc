@@ -103,7 +103,7 @@ static void *_malloc_tiny(void) {
     }
 
 #ifndef BONUS
-    return (ft_tiny_alloc((t_tiny *)g_master.qtiny.head))
+    return (ft_tiny_alloc((t_tiny *)g_master.qtiny.head));
 #else
     void *addr = ft_tiny_alloc((t_tiny *)g_master.qtiny.head);
     show_historics("malloc", addr, TINY_THRESHOLD);
@@ -138,7 +138,7 @@ static void *_malloc_small(void) {
     return (ft_small_alloc((t_small *)g_master.qsmall.head));
 #else
     void *addr = ft_small_alloc((t_small *)g_master.qsmall.head);
-    show_historics("malloc", addr, TINY_THRESHOLD);
+    show_historics("malloc", addr, LARGE_THRESHOLD);
     return (addr);
 #endif
 }

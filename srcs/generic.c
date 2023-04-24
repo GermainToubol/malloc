@@ -38,7 +38,18 @@ __attribute__((__visibility__("default"))) void *realloc(void * addr,
     void *new;
 
     pthread_mutex_lock(&g_mutex);
+#ifndef BONUS
+
+#else
+	show_historics("realloc.start", addr, size);
+#endif
     new = ft_realloc(addr, size);
+
+#ifndef BONUS
+
+#else
+	show_historics("realloc.end", new, size);
+#endif
     pthread_mutex_unlock(&g_mutex);
     return (new);
 }

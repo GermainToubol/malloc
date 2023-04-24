@@ -93,6 +93,7 @@ void *_realloc_large(t_gdata *gdata, void *addr, size_t size) {
                                        - sizeof(*gdata)]);
         ft_memmove(new->data, gdata->data, size);
         new->size = new_size | BLOCK_OTHER | BLOCK_USED;
+		show_historics("malloc", new->data, new_size);
         gdata->size =
             (REAL_SIZE(gdata) - new_size) | (gdata->size & BLOCK_MASK);
         ft_free(addr);
@@ -132,10 +133,14 @@ void *_realloc_large(t_gdata *gdata, void *addr, size_t size) {
             new->prevsize = totsize - new_size;
             base->size    = new->prevsize | (base->size & BLOCK_USED);
             ft_node_init((t_node *)base->data, new->prevsize);
+			show_historics("malloc", new->data, new_size);
+			show_historics("free", gdata->data, size);
             g_master.sroot =
                 ft_tree_insert(g_master.sroot, (t_node *)base->data);
             return (new->data);
         }
+		show_historics("malloc", base->data, REAL_SIZE(gdata));
+		show_historics("free", gdata->data, totsize);
         ft_memmove(base->data, gdata->data, REAL_SIZE(gdata));
         base->size = totsize | BLOCK_OTHER | (base->size & BLOCK_USED);
         return (base->data);
