@@ -43,5 +43,6 @@ extern t_root g_master;
 void *ft_malloc(size_t size);
 void  ft_free(void *addr);
 void *ft_realloc(void *addr, size_t size);
+void  show_historics(const char *action, void *ptr, size_t size);
 
 #endif /* FT_MALLOC_H */

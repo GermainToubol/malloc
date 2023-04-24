@@ -38,7 +38,7 @@ SRC_LST		:= malloc.c free.c realloc.c generic.c							\
 					ft_gdata_findaddr.c)									\
 				$(addprefix tree/,ft_tree_insert.c ft_tree_search.c 		\
 					ft_node_init.c)											\
-				$(addprefix dump/,show_alloc_mem.c)							\
+				$(addprefix dump/,show_alloc_mem.c show_historics.c)		\
 				$(addprefix heap/,ft_heap_swap_nodes.c ft_queue_push.c		\
 					ft_queue_pop.c)											\
 				$(addprefix tiny/,ft_tiny_init.c ft_tiny_alloc.c			\
@@ -50,17 +50,24 @@ SRCS		:= $(addprefix $(SRC_DIR)/,$(SRC_LST))
 # List of all object files (.o)
 # -------------------------------------------------------------------------
 ifeq (,$(filter test, $(MAKECMDGOALS)))
-	OBJ_DIR	:= objs
 	CFLAGS	+= -fvisibility=hidden
 	HOSTTYPE	?= $(shell uname -m)_$(shell uname -s)
+	OBJ_DIR	:= objs/objs.$(HOSTTYPE)
 	IS_TEST := false
 else
-	OBJ_DIR	:= objs.test
 	CFLAGS += -g3
 	HOSTTYPE	?= $(shell uname -m)_$(shell uname -s)
 	HOSTTYPE 	:= $(HOSTTYPE)_test
+	OBJ_DIR	:= objs/objs.test
 	IS_TEST := true
 endif
+
+ifeq (bonus, $(filter bonus, $(MAKECMDGOALS)))
+	CFLAGS += -DBONUS
+	HOSTTYPE := $(HOSTTYPE)_bonus
+	OBJ_DIR	:= $(OBJ_DIR).bonus
+endif
+
 
 GENERIC		:= libft_malloc.so
 NAME		:= libft_malloc_$(HOSTTYPE).so
@@ -100,15 +107,11 @@ $(OBJ_DIR)/%.d: $(SRC_DIR)/%.c start_deps
 
 .PHONY:		clean
 clean:
-			$(RM) $(OBJS)
-
-.PHONY:		dclean
-dclean:
-			$(RM) $(DEPS)
+			@$(RM) -rv objs
 
 
 .PHONY:		fclean
-fclean:		clean dclean
+fclean:		clean
 			$(RM) $(NAME) $(GENERIC)
 			@rmdir -p --ignore-fail-on-non-empty $(dir $(OBJS)) 2> /dev/null	\
 				|| exit 0
@@ -119,6 +122,9 @@ re:			fclean all
 .PHONY: 	test
 test:		all
 			pytest
+
+.PHONY:		bonus
+bonus:		all
 
 # Documentation
 # -------------------------------------------------------------------------

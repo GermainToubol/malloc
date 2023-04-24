@@ -64,7 +64,18 @@ static void *_malloc_large(size_t size) {
         }
     }
     data = (t_gdata *)node - 1;
+#ifndef BONUS
     return (ft_gdata_alloc(data, size, 3));
+#else
+    t_gdata *tmp = ft_gdata_alloc(data, size, 3);
+    if (tmp == NULL)
+        return (NULL);
+    tmp--;
+    show_historics("malloc",
+                   tmp->data,
+                   (tmp->size & ~BLOCK_MASK) - sizeof(tmp->size));
+    return (tmp->data);
+#endif
 }
 
 static void *_malloc_tiny(void) {
@@ -90,7 +101,14 @@ static void *_malloc_tiny(void) {
             return (NULL);
         ft_tiny_init(tiny);
     }
-    return (ft_tiny_alloc((t_tiny *)g_master.qtiny.head));
+
+#ifndef BONUS
+    return (ft_tiny_alloc((t_tiny *)g_master.qtiny.head))
+#else
+    void *addr = ft_tiny_alloc((t_tiny *)g_master.qtiny.head);
+    show_historics("malloc", addr, TINY_THRESHOLD);
+    return (addr);
+#endif
 }
 
 static void *_malloc_small(void) {
@@ -116,7 +134,13 @@ static void *_malloc_small(void) {
             return (NULL);
         ft_small_init(small);
     }
+#ifndef BONUS
     return (ft_small_alloc((t_small *)g_master.qsmall.head));
+#else
+    void *addr = ft_small_alloc((t_small *)g_master.qsmall.head);
+    show_historics("malloc", addr, TINY_THRESHOLD);
+    return (addr);
+#endif
 }
 
 void *ft_malloc(size_t size) {

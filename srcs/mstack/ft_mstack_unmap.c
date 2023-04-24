@@ -44,6 +44,7 @@ void ft_mstack_unmap(t_mstack *mstack) {
             mstack->next = NULL;
         g_master.sroot = ft_tree_delete(g_master.sroot, (t_node *)data->data);
         munmap(data, size);
+        show_historics("munmap", data, size);
         return;
     }
     if (data->size > (uint64_t)getpagesize()) {
@@ -59,6 +60,7 @@ void ft_mstack_unmap(t_mstack *mstack) {
         mstack->size -= retreive;
         next->prevsize -= retreive;
         munmap(data, retreive);
+        show_historics("munmap", data, retreive);
         if (next->prevsize == 0)
             return;
         data           = (t_gdata *)((uintptr_t)next - next->prevsize);
