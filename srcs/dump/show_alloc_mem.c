@@ -71,6 +71,9 @@ enum e_state
  * @fn void show_alloc_mem(void)
  */
 __attribute__((__visibility__("default"))) void show_alloc_mem(void) {
+#ifdef BONUS
+    pthread_mutex_lock(&g_mutex);
+#endif
     t_mstack *   mstack;
     t_gdata *    gdata;
     uint64_t     totsize;
@@ -116,4 +119,7 @@ __attribute__((__visibility__("default"))) void show_alloc_mem(void) {
         }
     }
     ft_printf("totsize: %u\n", totsize);
+#ifdef BONUS
+    pthread_mutex_unlock(&g_mutex);
+#endif
 }
