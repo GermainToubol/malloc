@@ -15,12 +15,13 @@
  */
 
 #include "ft_heap.h"
+#include "libft.h"
 
 #include <stddef.h>
 #include <stdint.h>
 
 static inline void _node_init(t_heap *node) {
-    *node = (t_heap) { NULL, NULL, NULL, NULL, NULL };
+    ft_bzero(node, sizeof(*node));
 }
 
 static void _insert_node(t_queue *queue, t_heap *node) {

@@ -16,6 +16,7 @@
  */
 
 #include "ft_heap.h"
+#include "libft.h"
 
 static void _update_node(t_queue *queue, t_heap *node, t_heap *ref) {
     if (node->prev == node)
@@ -59,9 +60,9 @@ void ft_heap_swap_nodes(t_queue *queue, t_heap *a, t_heap *b) {
     // Swap content
     t_heap tmp;
 
-    tmp = *a;
-    *a  = *b;
-    *b  = tmp;
+    ft_memcpy(&tmp, a, sizeof(*a));
+    ft_memcpy(a, b, sizeof(*b));
+    ft_memcpy(b, &tmp, sizeof(*a));
 
     // Restore prev/next
     _update_node(queue, a, b);

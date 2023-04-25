@@ -35,7 +35,7 @@ void ft_mstack_unmap(t_mstack *mstack) {
     if ((data->size & BLOCK_MASK) != 0)
         return;
     next = (t_gdata *)(&data->data[data->size - sizeof(*data)]);
-    if (next->size == 0) {
+    if (next->size == 0 && mstack->previous != NULL) {
         size   = mstack->size;
         mstack = mstack->previous;
         if (mstack == NULL)

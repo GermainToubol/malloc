@@ -147,7 +147,7 @@ void *_realloc_large(t_gdata *gdata, void *addr, size_t size) {
     }
     ptr = ft_malloc(size);
     if (ptr != NULL)
-        ft_memcpy(addr, ptr, REAL_SIZE(gdata) - sizeof(gdata->size));
+        ft_memcpy(ptr, addr, REAL_SIZE(gdata) - sizeof(gdata->size));
     ft_free(addr);
     return (ptr);
 }

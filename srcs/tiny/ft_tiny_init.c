@@ -17,6 +17,7 @@
 #include "ft_heap.h"
 #include "ft_malloc.h"
 #include "ft_tiny.h"
+#include "libft.h"
 
 #include <stddef.h>
 #include <stdint.h>
@@ -28,7 +29,7 @@
 void ft_tiny_init(t_tiny *chunk) {
     if (chunk == NULL)
         return;
-    chunk->node     = (t_heap) { NULL, NULL, NULL, NULL, NULL };
+    ft_bzero(&chunk->node, sizeof(chunk->node));
     chunk->table[0] = TINY_MASK_A;
     chunk->table[1] = TINY_MASK_B;
     ft_queue_push(&g_master.qtiny, &chunk->node);
