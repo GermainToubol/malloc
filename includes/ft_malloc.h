@@ -45,7 +45,7 @@ void  ft_free(void *addr);
 void *ft_realloc(void *addr, size_t size);
 void  show_historics(const char *action, void *ptr, size_t size);
 
-#    ifdef BONUS
+#ifdef BONUS
 #include <pthread.h>
 extern pthread_mutex_t g_mutex;
 #endif
