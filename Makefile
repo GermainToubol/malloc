@@ -38,7 +38,8 @@ SRC_LST		:= malloc.c free.c realloc.c generic.c							\
 					ft_gdata_findaddr.c)									\
 				$(addprefix tree/,ft_tree_insert.c ft_tree_search.c 		\
 					ft_node_init.c)											\
-				$(addprefix dump/,show_alloc_mem.c show_historics.c)		\
+				$(addprefix dump/,show_alloc_mem.c show_historics.c			\
+					show_alloc_mem_ex.c)									\
 				$(addprefix heap/,ft_heap_swap_nodes.c ft_queue_push.c		\
 					ft_queue_pop.c)											\
 				$(addprefix tiny/,ft_tiny_init.c ft_tiny_alloc.c			\
