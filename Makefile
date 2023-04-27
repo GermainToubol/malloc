@@ -96,7 +96,7 @@ $(GENERIC): $(NAME)
 				&& echo "striping the symbols"; fi
 
 $(NAME):	$(OBJS) $(LIB_FILES)
-			$(CC) $(INCLUDES) $(OBJS) $(CFLAGS) -shared -o $@ -lft -L./libft -Wl,-rpath=./libft
+			$(CC) $(INCLUDES) $(OBJS) $(CFLAGS) -shared -o $@ -lft -L./libft -Wl,-rpath=$(shell pwd)/libft
 
 $(OBJ_DIR)/%.o:	$(SRC_DIR)/%.c start_compiling
 			@mkdir -p $(dir $@)

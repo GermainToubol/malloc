@@ -55,6 +55,26 @@ static bool isfree_block(void *addr, t_gdata *gdata) {
 	return (false);
 }
 
+static bool istiny_header(void *addr, t_gdata *gdata) {
+	if ((gdata->size & BLOCK_OTHER) == BLOCK_TINY) {
+		t_tiny *tiny = (t_tiny *)gdata->data;
+		if ((uintptr_t)tiny->data > (uintptr_t)addr) {
+			return (true);
+		}
+	}
+	return (false);
+}
+
+static bool issmall_header(void *addr, t_gdata *gdata) {
+	if ((gdata->size & BLOCK_OTHER) == BLOCK_SMALL) {
+		t_small *small = (t_small *)gdata->data;
+		if ((uintptr_t)small->data > (uintptr_t)addr) {
+			return (true);
+		}
+	}
+	return (false);
+}
+
 static void
     _build_str(char *buff, uint8_t *data, t_gdata *gdata, t_mstack *mstack) {
     ft_strlcpy(buff, "%018p ", 2048);
@@ -74,11 +94,11 @@ static void
             ft_strlcat(buff, "\033[90m%02x\033[0m ", 2048);
 		}
 		/* Tiny header */
-        else if ((gdata->size & BLOCK_OTHER) == BLOCK_TINY) {
+        else if (istiny_header(&data[i], gdata)) {
 			ft_strlcat(buff, "\033[33m%02x\033[0m ", 2048);
 		}
 		/* Small header */
-        else if ((gdata->size & BLOCK_OTHER) == BLOCK_SMALL) {
+        else if (issmall_header(&data[i], gdata)) {
 			ft_strlcat(buff, "\033[31m%02x\033[0m ", 2048);
 		}
 		/* Used Normal*/
